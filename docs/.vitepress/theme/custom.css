@@ -1,0 +1,50 @@
+/* .vitepress/theme/custom.css */
+
+/* 任务列表样式优化 */
+.contains-task-list {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.task-list-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.task-list-item input[type="checkbox"] {
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+/* 脚注样式 */
+.footnotes-sep {
+  margin-top: 2rem;
+  border-top: 1px solid var(--vp-c-divider);
+}
+.footnotes {
+  font-size: 0.9em;
+  color: var(--vp-c-text-2);
+}
+
+/* 右侧大纲动态折叠效果 */
+/* 默认隐藏所有子级大纲 (H3) */
+.VPDocOutline-item ul {
+  display: none;
+}
+
+/* 当父级条目 (H2) 激活时，显示其子级大纲 */
+.VPDocOutline-item:has(> .outline-link.active) > ul {
+  display: block;
+  animation: slideDown 0.2s ease-out;
+}
+
+/* 当子级条目 (H3) 激活时，保持显示列表 */
+.VPDocOutline-item:has(.outline-link.active) > ul {
+  display: block;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
