@@ -22,23 +22,13 @@ export default defineConfig({
     },
     nav: [
       { text: '首页', link: '/' },
-      { text: '新生', link: '/new-student/' },
       { text: '学业', link: '/academics/' },
       { text: '生活', link: '/life/' },
       { text: '资源', link: '/resources/software' },
-      { text: '出路', link: '/career/' },
       { text: '工具', link: '/tools/' }
     ],
 
     sidebar: {
-      '/new-student/': [
-        {
-          text: '新生入学',
-          items: [
-            { text: '入学清单', link: '/new-student/' }
-          ]
-        }
-      ],
       '/academics/': [
         {
           text: '教务指南',
@@ -51,8 +41,23 @@ export default defineConfig({
         {
           text: '学院导航',
           items: [
-            { text: '计算机学院', link: '/academics/colleges/cs/' },
-            { text: '商学院', link: '/academics/colleges/business/' }
+            { 
+              text: '计算机学院', 
+              link: '/academics/colleges/cs/',
+              collapsed: true,
+              items: [
+                { text: '专业介绍', link: '/academics/colleges/cs/#专业介绍' },
+                { text: '核心课程', link: '/academics/colleges/cs/#核心课程' },
+                { text: '实验室', link: '/academics/colleges/cs/#实验室介绍' },
+                { text: '测试', link: '/academics/colleges/cs/test' },
+                { text: 'Markdown 演示', link: '/academics/colleges/cs/markdown-demo' }
+              ]
+            },
+            { 
+              text: '商学院', 
+              link: '/academics/colleges/business/',
+              collapsed: true
+            }
           ]
         }
       ],
@@ -76,19 +81,12 @@ export default defineConfig({
           ]
         }
       ],
-      '/career/': [
-        {
-          text: '升学就业',
-          items: [
-            { text: '规划概览', link: '/career/' }
-          ]
-        }
-      ],
       '/tools/': [
         {
           text: '在线工具',
           items: [
-            { text: 'GPA 计算器 & 倒计时', link: '/tools/' }
+            { text: 'GPA 计算器 ', link: '/tools/compute' },
+            { text: '倒计时', link: '/tools/time' }
           ]
         }
       ]
@@ -99,7 +97,7 @@ export default defineConfig({
     ],
 
     footer: {
-      message: '由 VitePress 强力驱动',
+      message: '由 VitePress 驱动',
       copyright: 'Copyright © 2025 USC Wiki Team'
     }
   }

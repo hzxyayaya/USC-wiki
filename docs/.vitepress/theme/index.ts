@@ -4,6 +4,7 @@ import type { App } from 'vue'
 import GPACalculator from '../components/GPACalculator.vue'
 import Countdown from '../components/Countdown.vue'
 import HomeEnhancement from '../components/HomeEnhancement.vue'
+import './tailwind.css'
 import './custom.css'
 export default {
   extends: DefaultTheme,
