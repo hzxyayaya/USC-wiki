@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4.1.17",
+    "@types/markdown-it": "^14.1.2",
     "markdown-it": "^14.1.0",
     "markdown-it-mark": "^4.0.0",
     "vditor": "^3.11.2"

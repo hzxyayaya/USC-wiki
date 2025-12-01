@@ -42,19 +42,19 @@
       <!-- VitePress 提示框（仅插入语法，导出后可渲染） -->
       <div class="toolbar-group">
         <span class="group-label">VitePress</span>
-        <button class="toolbar-btn tip-btn" @click="insertContainer('info', '信息')" title="信息框（导出后渲染）">
+        <button class="toolbar-btn tip-btn" @click="insertContainer('info', '信息')" title="信息框">
           ℹ️
         </button>
-        <button class="toolbar-btn tip-btn" @click="insertContainer('tip', '提示')" title="提示框（导出后渲染）">
+        <button class="toolbar-btn tip-btn" @click="insertContainer('tip', '提示')" title="提示框">
           💡
         </button>
-        <button class="toolbar-btn warning-btn" @click="insertContainer('warning', '警告')" title="警告框（导出后渲染）">
+        <button class="toolbar-btn warning-btn" @click="insertContainer('warning', '警告')" title="警告框">
           ⚠️
         </button>
-        <button class="toolbar-btn danger-btn" @click="insertContainer('danger', '危险')" title="危险框（导出后渲染）">
+        <button class="toolbar-btn danger-btn" @click="insertContainer('danger', '危险')" title="危险框">
           🚫
         </button>
-        <button class="toolbar-btn" @click="insertContainer('details', '点击展开')" title="折叠块（导出后渲染）">
+        <button class="toolbar-btn" @click="insertContainer('details', '点击展开')" title="折叠块">
           📂
         </button>
       </div>
@@ -106,20 +106,102 @@
       </button>
     </div>
 
-    <!-- Vditor 编辑器容器 -->
-    <div id="vditor" class="vditor-container"></div>
+    <!-- 编辑器主体 -->
+    <div class="editor-body" :class="{ 'split-view': isFullscreen }">
+      <!-- 左侧：代码编辑器 -->
+      <div class="editor-pane" :class="{ 'half-width': isFullscreen }">
+        <div class="pane-header" v-if="isFullscreen">
+          <span>📝 Markdown</span>
+        </div>
+        <div id="vditor" class="vditor-container"></div>
+      </div>
+      
+      <!-- 右侧：VitePress 风格预览（仅全屏模式） -->
+      <div class="preview-pane" v-if="isFullscreen">
+        <div class="pane-header">
+          <span>👁️ VitePress 预览</span>
+        </div>
+        <div class="preview-content vp-doc" ref="previewRef" v-html="renderedHtml"></div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 import Vditor from 'vditor'
+import MarkdownIt from 'markdown-it'
+import markdownItMark from 'markdown-it-mark'
+import markdownItTaskLists from 'markdown-it-task-lists'
 import 'vditor/dist/index.css'
 
 // 状态
 let vditor: Vditor | null = null
 const isFullscreen = ref(false)
 const showEmojiPicker = ref(false)
+const renderedHtml = ref('')
+const previewRef = ref<HTMLElement | null>(null)
+
+// markdown-it 实例，支持 VitePress 风格渲染
+const md = new MarkdownIt({
+  html: true,
+  linkify: true,
+  typographer: true,
+  breaks: true,
+})
+md.use(markdownItMark)
+md.use(markdownItTaskLists, { enabled: true, label: true, labelAfter: true })
+
+// 自定义 VitePress 容器渲染
+const renderVitePressContainers = (content: string): string => {
+  // 处理 ::: type title 容器
+  const containerRegex = /:::\s*(tip|warning|danger|info|details)\s*(.*?)\n([\s\S]*?):::/g
+  
+  return content.replace(containerRegex, (match, type, title, innerContent) => {
+    const titleText = title.trim() || type.charAt(0).toUpperCase() + type.slice(1)
+    
+    if (type === 'details') {
+      return `<details class="details custom-block">
+        <summary>${titleText}</summary>
+        ${md.render(innerContent.trim())}
+      </details>`
+    }
+    
+    return `<div class="custom-block ${type}">
+      <p class="custom-block-title">${titleText}</p>
+      ${md.render(innerContent.trim())}
+    </div>`
+  })
+}
+
+// 渲染 Markdown 为 HTML
+const renderMarkdown = (content: string): string => {
+  // 1. 处理 VitePress 容器
+  let processedContent = renderVitePressContainers(content)
+  
+  // 2. 如果内容包含容器，分别处理
+  if (processedContent !== content) {
+    const parts = processedContent.split(/(<div class="custom-block[\s\S]*?<\/div>|<details[\s\S]*?<\/details>)/g)
+    processedContent = parts.map(part => {
+      if (part.startsWith('<div class="custom-block') || part.startsWith('<details')) {
+        return part
+      }
+      return md.render(part)
+    }).join('')
+  } else {
+    processedContent = md.render(content)
+  }
+  
+  return processedContent
+}
+
+// 更新预览
+const updatePreview = () => {
+  if (vditor && isFullscreen.value) {
+    const content = vditor.getValue()
+    renderedHtml.value = renderMarkdown(content)
+  }
+}
 
 // 常用 Emoji
 const emojis = [
@@ -249,6 +331,10 @@ const insertEmoji = (emoji: string) => {
 // 切换全屏
 const toggleFullscreen = () => {
   isFullscreen.value = !isFullscreen.value
+  if (isFullscreen.value) {
+    // 进入全屏时更新预览
+    setTimeout(updatePreview, 100)
+  }
 }
 
 // 导出 Markdown
@@ -304,16 +390,41 @@ onMounted(() => {
       enable: true,
       id: 'usc-wiki-vditor',
     },
+    input: () => {
+      updatePreview()
+    },
     after: () => {
       vditor?.setValue(`# 欢迎使用 USC Wiki Markdown 编辑器
 
-这是专为 USC Wiki 定制的 Markdown 编辑器。
+这是专为 USC Wiki 定制的 Markdown 编辑器，全屏模式下可查看 VitePress 风格预览。
 
-## ✨ 支持的功能
+## 支持的功能
 
 ### 基础格式
 - **粗体**、*斜体*、~~删除线~~、==高亮==
 - \`行内代码\`
+
+### VitePress 提示框
+
+::: tip 提示
+这是一个提示框，全屏模式下可以预览效果！
+:::
+
+::: warning 警告
+这是一个警告框
+:::
+
+::: info 信息
+这是一个信息框
+:::
+
+::: danger 危险
+这是一个危险框
+:::
+
+::: details 点击展开
+折叠的内容在这里
+:::
 
 ### 数学公式
 
@@ -321,7 +432,7 @@ onMounted(() => {
 
 块级公式：
 $$
-GPA = \\frac{\\sum_{i=1}^{n} (学分_i \\times 绩点_i)}{\\sum_{i=1}^{n} 学分_i}
+GPA = \\frac{\\sum_{i=1}^{n} (C_i \\times P_i)}{\\sum_{i=1}^{n} C_i}
 $$
 
 ### 任务列表
@@ -346,11 +457,13 @@ function hello() {
 
 ---
 
-> **提示**：VitePress 特有语法（如 \`::: tip\` 提示框）在此编辑器中以原始格式显示，
-> 导出后在 VitePress 中可正常渲染。
+> 💡 **提示**：点击右上角 **全屏** 按钮，可以看到左右分栏视图！
+> 左侧编辑 Markdown，右侧实时预览 VitePress 风格效果。
 
 使用上方工具栏快速插入各种格式，点击 **导出** 保存为 .md 文件。
 `)
+      // 初始化预览
+      updatePreview()
     },
   })
 
@@ -410,9 +523,54 @@ onUnmounted(() => {
   margin: 0;
   border-radius: 0;
   border: none;
-  overflow: auto;
   display: flex;
   flex-direction: column;
+}
+
+/* 编辑器主体 */
+.editor-body {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.editor-body.split-view {
+  display: flex;
+}
+
+.editor-pane {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.editor-pane.half-width {
+  flex: 0 0 50%;
+  border-right: 1px solid var(--vp-c-border);
+}
+
+.preview-pane {
+  flex: 0 0 50%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--vp-c-bg);
+}
+
+.pane-header {
+  padding: 8px 16px;
+  background: var(--vp-c-bg-soft);
+  border-bottom: 1px solid var(--vp-c-border);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--vp-c-text-2);
+}
+
+.preview-content {
+  flex: 1;
+  overflow: auto;
+  padding: 24px 32px;
 }
 
 /* 自定义工具栏 */
@@ -557,12 +715,12 @@ onUnmounted(() => {
 .vditor-container {
   min-height: 500px;
   width: 100%;
+  flex: 1;
+  overflow: auto;
 }
 
 .fullscreen .vditor-container {
-  flex: 1;
   min-height: 0;
-  overflow: auto;
 }
 
 /* 覆盖 Vditor 默认样式 */
@@ -587,6 +745,11 @@ onUnmounted(() => {
   background: var(--vp-c-bg) !important;
   color: var(--vp-c-text-1) !important;
   padding: 20px 24px !important;
+}
+
+/* 隐藏即时渲染模式的标题级别标记 */
+:deep(.vditor-ir__marker--heading) {
+  display: none !important;
 }
 
 :deep(.vditor-counter) {
@@ -652,5 +815,214 @@ onUnmounted(() => {
     width: 100%;
     justify-content: flex-end;
   }
+}
+
+/* VitePress 风格预览样式 */
+.preview-content h1 {
+  font-size: 2em;
+  margin: 0 0 1em;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--vp-c-text-1);
+}
+
+.preview-content h2 {
+  font-size: 1.5em;
+  margin: 1.5em 0 0.5em;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--vp-c-border);
+  font-weight: 600;
+  color: var(--vp-c-text-1);
+}
+
+.preview-content h3 {
+  font-size: 1.25em;
+  margin: 1.2em 0 0.5em;
+  font-weight: 600;
+  color: var(--vp-c-text-1);
+}
+
+.preview-content p {
+  margin: 1em 0;
+  line-height: 1.7;
+  color: var(--vp-c-text-1);
+}
+
+.preview-content ul, .preview-content ol {
+  padding-left: 1.5em;
+  margin: 1em 0;
+}
+
+.preview-content li {
+  margin: 0.5em 0;
+  line-height: 1.7;
+}
+
+.preview-content code {
+  background: var(--vp-c-bg-soft);
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  font-size: 0.9em;
+  color: var(--vp-c-brand-1);
+}
+
+.preview-content pre {
+  background: var(--vp-c-bg-soft);
+  padding: 16px;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 1em 0;
+}
+
+.preview-content pre code {
+  background: none;
+  padding: 0;
+  color: var(--vp-c-text-1);
+}
+
+.preview-content blockquote {
+  margin: 1em 0;
+  padding: 0.5em 1em;
+  border-left: 4px solid var(--vp-c-brand-1);
+  background: var(--vp-c-bg-soft);
+  color: var(--vp-c-text-2);
+}
+
+.preview-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1em 0;
+}
+
+.preview-content th, .preview-content td {
+  border: 1px solid var(--vp-c-border);
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.preview-content th {
+  background: var(--vp-c-bg-soft);
+  font-weight: 600;
+}
+
+.preview-content a {
+  color: var(--vp-c-brand-1);
+  text-decoration: none;
+}
+
+.preview-content a:hover {
+  text-decoration: underline;
+}
+
+.preview-content hr {
+  margin: 2em 0;
+  border: none;
+  border-top: 1px solid var(--vp-c-border);
+}
+
+.preview-content mark {
+  background: linear-gradient(120deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
+  padding: 0.1em 0.3em;
+  border-radius: 4px;
+  color: inherit;
+}
+
+/* VitePress 自定义容器样式 */
+.preview-content .custom-block {
+  margin: 1em 0;
+  padding: 16px 20px;
+  border-radius: 8px;
+  border-left: 4px solid;
+}
+
+.preview-content .custom-block-title {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.preview-content .custom-block.info {
+  background: rgba(99, 102, 241, 0.1);
+  border-color: #6366f1;
+}
+
+.preview-content .custom-block.info .custom-block-title {
+  color: #6366f1;
+}
+
+.preview-content .custom-block.tip {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: #10b981;
+}
+
+.preview-content .custom-block.tip .custom-block-title {
+  color: #10b981;
+}
+
+.preview-content .custom-block.warning {
+  background: rgba(234, 179, 8, 0.1);
+  border-color: #eab308;
+}
+
+.preview-content .custom-block.warning .custom-block-title {
+  color: #eab308;
+}
+
+.preview-content .custom-block.danger {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: #ef4444;
+}
+
+.preview-content .custom-block.danger .custom-block-title {
+  color: #ef4444;
+}
+
+.preview-content details.custom-block {
+  background: var(--vp-c-bg-soft);
+  border-color: var(--vp-c-border);
+}
+
+.preview-content details.custom-block summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--vp-c-text-1);
+}
+
+.preview-content details.custom-block[open] summary {
+  margin-bottom: 12px;
+}
+
+/* 任务列表样式 */
+.preview-content .task-list-item {
+  list-style: none;
+  margin-left: -1.5em;
+}
+
+.preview-content .task-list-item input[type="checkbox"] {
+  margin-right: 0.5em;
+  transform: scale(1.2);
+  accent-color: var(--vp-c-brand-1);
+}
+
+/* 数学公式样式 */
+.preview-content .math-block {
+  overflow-x: auto;
+  padding: 16px;
+  margin: 1em 0;
+  background: var(--vp-c-bg-soft);
+  border-radius: 8px;
+  text-align: center;
+}
+
+.preview-content .math-inline {
+  padding: 0 2px;
+}
+
+/* MathJax 样式调整 */
+.preview-content mjx-container {
+  overflow-x: auto;
+}
+
+.preview-content mjx-container[display="true"] {
+  margin: 0 !important;
 }
 </style>
