@@ -84,6 +84,9 @@
       <div class="toolbar-group">
         <span class="group-label">其他</span>
         <button class="toolbar-btn" @click="insertLine('> ')" title="引用">❝</button>
+        <button class="toolbar-btn" @click="insertFootnote" title="脚注">
+          <sup style="font-size: 10px;">注</sup>
+        </button>
         <button class="toolbar-btn" @click="insertKbd" title="键盘按键">⌨️</button>
         <button class="toolbar-btn" @click="showEmojiPicker = !showEmojiPicker" title="Emoji">😊</button>
       </div>
@@ -133,7 +136,11 @@ import Vditor from 'vditor'
 import MarkdownIt from 'markdown-it'
 import markdownItMark from 'markdown-it-mark'
 import markdownItTaskLists from 'markdown-it-task-lists'
+import markdownItFootnote from 'markdown-it-footnote'
+import katex from 'katex'
+import { codeToHtml } from 'shiki'
 import 'vditor/dist/index.css'
+import 'katex/dist/katex.min.css'
 
 // 状态
 let vditor: Vditor | null = null
@@ -142,8 +149,11 @@ const showEmojiPicker = ref(false)
 const renderedHtml = ref('')
 const previewRef = ref<HTMLElement | null>(null)
 
-// markdown-it 实例，支持 VitePress 风格渲染
-const md = new MarkdownIt({
+// 代码块缓存
+const codeBlockCache = new Map<string, string>()
+
+// markdown-it 实例
+const md: MarkdownIt = new MarkdownIt({
   html: true,
   linkify: true,
   typographer: true,
@@ -151,6 +161,54 @@ const md = new MarkdownIt({
 })
 md.use(markdownItMark)
 md.use(markdownItTaskLists, { enabled: true, label: true, labelAfter: true })
+md.use(markdownItFootnote)
+
+// 渲染数学公式 - 使用占位符方式避免被 markdown-it 破坏
+const renderMath = (content: string): { content: string; formulas: string[] } => {
+  const formulas: string[] = []
+  
+  // 先处理块级公式 $$...$$
+  content = content.replace(/\$\$([\s\S]*?)\$\$/g, (match, formula) => {
+    const index = formulas.length
+    try {
+      formulas.push(`<div class="math-block">${katex.renderToString(formula.trim(), {
+        displayMode: true,
+        throwOnError: false
+      })}</div>`)
+    } catch (e) {
+      formulas.push(`<div class="math-block math-error">${formula}</div>`)
+    }
+    return `\nMATHBLOCK${index}ENDMATH\n`
+  })
+  
+  // 处理行内公式 $...$
+  content = content.replace(/\$([^\$\n]+?)\$/g, (match, formula) => {
+    const index = formulas.length
+    try {
+      formulas.push(katex.renderToString(formula, {
+        displayMode: false,
+        throwOnError: false
+      }))
+    } catch (e) {
+      formulas.push(`<span class="math-error">${formula}</span>`)
+    }
+    return `MATHINLINE${index}ENDMATH`
+  })
+  
+  return { content, formulas }
+}
+
+// 恢复数学公式
+const restoreMath = (html: string, formulas: string[]): string => {
+  formulas.forEach((formula, index) => {
+    // 块级公式 - 可能被 <p> 包裹
+    html = html.replace(`<p>MATHBLOCK${index}ENDMATH</p>`, formula)
+    html = html.replace(`MATHBLOCK${index}ENDMATH`, formula)
+    // 行内公式
+    html = html.replace(`MATHINLINE${index}ENDMATH`, formula)
+  })
+  return html
+}
 
 // 自定义 VitePress 容器渲染
 const renderVitePressContainers = (content: string): string => {
@@ -174,32 +232,82 @@ const renderVitePressContainers = (content: string): string => {
   })
 }
 
-// 渲染 Markdown 为 HTML
-const renderMarkdown = (content: string): string => {
-  // 1. 处理 VitePress 容器
-  let processedContent = renderVitePressContainers(content)
+// 处理代码块高亮（异步）
+const highlightCodeBlocks = async (html: string): Promise<string> => {
+  // 匹配 markdown-it 生成的代码块
+  const codeBlockRegex = /<pre><code class="language-(\w+)">([\s\S]*?)<\/code><\/pre>/g
+  const matches = [...html.matchAll(codeBlockRegex)]
   
-  // 2. 如果内容包含容器，分别处理
-  if (processedContent !== content) {
-    const parts = processedContent.split(/(<div class="custom-block[\s\S]*?<\/div>|<details[\s\S]*?<\/details>)/g)
-    processedContent = parts.map(part => {
-      if (part.startsWith('<div class="custom-block') || part.startsWith('<details')) {
-        return part
+  for (const match of matches) {
+    const [fullMatch, lang, code] = match
+    const decodedCode = code
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&amp;/g, '&')
+      .replace(/&quot;/g, '"')
+    
+    // 使用缓存避免重复渲染
+    const cacheKey = `${lang}:${decodedCode}`
+    let highlighted = codeBlockCache.get(cacheKey)
+    
+    if (!highlighted) {
+      try {
+        highlighted = await codeToHtml(decodedCode, {
+          lang: lang || 'text',
+          theme: 'github-dark'
+        })
+        codeBlockCache.set(cacheKey, highlighted)
+      } catch (e) {
+        // 如果语言不支持，使用纯文本
+        highlighted = `<pre class="shiki"><code>${code}</code></pre>`
       }
-      return md.render(part)
-    }).join('')
-  } else {
-    processedContent = md.render(content)
+    }
+    
+    html = html.replace(fullMatch, highlighted)
   }
+  
+  // 处理没有语言标记的代码块
+  const plainCodeRegex = /<pre><code>([\s\S]*?)<\/code><\/pre>/g
+  html = html.replace(plainCodeRegex, '<pre class="shiki"><code>$1</code></pre>')
+  
+  return html
+}
+
+// 渲染 Markdown 为 HTML（异步）
+const renderMarkdown = async (content: string): Promise<string> => {
+  // 1. 先提取数学公式，用占位符替换
+  const { content: contentWithPlaceholders, formulas } = renderMath(content)
+  
+  // 2. 处理 VitePress 容器
+  let processedContent = renderVitePressContainers(contentWithPlaceholders)
+  
+  // 3. 分割内容，保护已渲染的 HTML 块
+  const containerPattern = /(<div class="custom-block[\s\S]*?<\/div>|<details[\s\S]*?<\/details>)/g
+  const parts = processedContent.split(containerPattern)
+  
+  processedContent = parts.map(part => {
+    // 跳过已处理的 HTML 块
+    if (part.startsWith('<div class="custom-block') || 
+        part.startsWith('<details')) {
+      return part
+    }
+    return md.render(part)
+  }).join('')
+  
+  // 4. 恢复数学公式
+  processedContent = restoreMath(processedContent, formulas)
+  
+  // 5. 代码块高亮
+  processedContent = await highlightCodeBlocks(processedContent)
   
   return processedContent
 }
 
 // 更新预览
-const updatePreview = () => {
+const updatePreview = async () => {
   if (vditor && isFullscreen.value) {
     const content = vditor.getValue()
-    renderedHtml.value = renderMarkdown(content)
+    renderedHtml.value = await renderMarkdown(content)
   }
 }
 
@@ -229,7 +337,7 @@ const syncTheme = () => {
     vditor.setTheme(
       dark ? 'dark' : 'classic',
       dark ? 'dark' : 'light',
-      dark ? 'native' : 'github'
+      'github-dark'  // 始终使用 github-dark 代码高亮主题
     )
   }
 }
@@ -379,7 +487,7 @@ onMounted(() => {
       },
       hljs: {
         lineNumber: true,
-        style: dark ? 'native' : 'github',
+        style: 'github-dark',
       },
     },
     counter: {
@@ -752,6 +860,15 @@ onUnmounted(() => {
   display: none !important;
 }
 
+/* 隐藏代码块的语法标记 */
+:deep(.vditor-ir__marker--info) {
+  display: none !important;
+}
+
+:deep(.vditor-ir .vditor-ir__marker--bi) {
+  color: #8b949e !important;
+}
+
 :deep(.vditor-counter) {
   background: var(--vp-c-bg-soft) !important;
   color: var(--vp-c-text-2) !important;
@@ -878,6 +995,30 @@ onUnmounted(() => {
   background: none;
   padding: 0;
   color: var(--vp-c-text-1);
+}
+
+/* Shiki 代码块样式 */
+.preview-content pre.shiki {
+  padding: 16px 20px;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 1em 0;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.preview-content pre.shiki code {
+  background: none;
+  padding: 0;
+  color: inherit;
+  font-family: 'Fira Code', 'Consolas', 'Monaco', monospace;
+}
+
+.preview-content :deep(.shiki) {
+  padding: 16px 20px;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 1em 0;
 }
 
 .preview-content blockquote {
@@ -1017,12 +1158,70 @@ onUnmounted(() => {
   padding: 0 2px;
 }
 
-/* MathJax 样式调整 */
-.preview-content mjx-container {
-  overflow-x: auto;
+.preview-content .math-error {
+  color: #ef4444;
+  font-family: monospace;
 }
 
-.preview-content mjx-container[display="true"] {
+/* KaTeX 样式调整 */
+.preview-content .katex-display {
   margin: 0 !important;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.preview-content .katex {
+  font-size: 1.1em;
+}
+
+/* 脚注样式 */
+.preview-content .footnotes {
+  margin-top: 2em;
+  padding-top: 1em;
+  border-top: 1px solid var(--vp-c-border);
+  font-size: 0.9em;
+  color: var(--vp-c-text-2);
+}
+
+.preview-content .footnotes-sep {
+  display: none;
+}
+
+.preview-content .footnotes ol {
+  padding-left: 1.5em;
+  margin: 0;
+}
+
+.preview-content .footnotes li {
+  margin: 0.5em 0;
+  line-height: 1.6;
+}
+
+.preview-content .footnote-ref {
+  font-size: 0.75em;
+  vertical-align: super;
+  line-height: 0;
+  margin-left: 1px;
+}
+
+.preview-content .footnote-ref a {
+  color: var(--vp-c-brand-1);
+  text-decoration: none;
+  padding: 0 2px;
+}
+
+.preview-content .footnote-ref a:hover {
+  text-decoration: underline;
+}
+
+.preview-content .footnote-backref {
+  color: var(--vp-c-brand-1);
+  text-decoration: none;
+  margin-left: 4px;
+  font-size: 0.85em;
+}
+
+.preview-content .footnote-backref:hover {
+  text-decoration: underline;
 }
 </style>

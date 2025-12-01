@@ -8,6 +8,9 @@ import mark from 'markdown-it-mark'
 export default defineConfig({
   title: "USC Wiki",
   description: "一个关于我们学校的百科全书",
+  head: [
+    ['link', { rel: 'icon', href: '/logo.png' }]
+  ],
   markdown: {
     config: (md) => {
       md.use(mathjax3)
@@ -18,6 +21,7 @@ export default defineConfig({
   },
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
+    logo: '/logo.png',
     outline: {
       level: [2, 3],
       label: '本页目录'

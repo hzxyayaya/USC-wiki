@@ -92,6 +92,43 @@
   position: relative;
 }
 
+/* Hero 图片调整 - 放在标题旁边 */
+.VPHero .VPImage {
+  max-width: 80px !important;
+  max-height: 80px !important;
+  border-radius: 50%;
+}
+
+.VPHero .image-container {
+  display: none !important;
+}
+
+/* 使用伪元素在标题前显示 logo */
+.VPHero .main .name {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.VPHero .main .name::before {
+  content: '';
+  display: inline-block;
+  width: 64px;
+  height: 64px;
+  background-image: url('/logo.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+  .VPHero .main .name::before {
+    width: 48px;
+    height: 48px;
+  }
+}
+
 /* Hero 标题渐变 */
 .VPHero .name {
   background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
