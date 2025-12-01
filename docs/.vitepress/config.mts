@@ -2,6 +2,7 @@ import { defineConfig } from 'vitepress'
 import mathjax3 from 'markdown-it-mathjax3'
 import taskLists from 'markdown-it-task-lists'
 import footnote from 'markdown-it-footnote'
+import mark from 'markdown-it-mark'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -12,6 +13,7 @@ export default defineConfig({
       md.use(mathjax3)
       md.use(taskLists)
       md.use(footnote)
+      md.use(mark)
     }
   },
   themeConfig: {

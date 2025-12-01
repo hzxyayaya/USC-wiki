@@ -393,3 +393,17 @@
   from { opacity: 0; transform: translateY(-5px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* ============================================
+  ✨ 高亮文本样式 (==文本==)
+   ============================================ */
+mark {
+  background: linear-gradient(120deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
+  padding: 0.1em 0.3em;
+  border-radius: 4px;
+  color: inherit;
+}
+
+.dark mark {
+  background: linear-gradient(120deg, rgba(129, 140, 248, 0.25) 0%, rgba(167, 139, 250, 0.25) 100%);
+}
