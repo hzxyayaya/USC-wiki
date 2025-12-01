@@ -2,6 +2,7 @@
   "name": "university-wiki-vitepress",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "docs:dev": "vitepress dev docs",
@@ -20,5 +21,10 @@
     "tailwindcss": "^4.1.17",
     "vitepress": "^1.6.4",
     "vue": "^3.5.24"
-  }
+  },
+  "dependencies": {
+    "@tailwindcss/postcss": "^4.1.17",
+    "markdown-it": "^14.1.0"
+  },
+  "packageManager": "pnpm@10.24.0+sha512.01ff8ae71b4419903b65c60fb2dc9d34cf8bb6e06d03bde112ef38f7a34d6904c424ba66bea5cdcf12890230bf39f9580473140ed9c946fef328b6e5238a345a"
 }

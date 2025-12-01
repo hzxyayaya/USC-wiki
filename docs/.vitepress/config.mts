@@ -46,9 +46,7 @@ export default defineConfig({
               link: '/academics/colleges/cs/',
               collapsed: true,
               items: [
-                { text: '专业介绍', link: '/academics/colleges/cs/#专业介绍' },
-                { text: '核心课程', link: '/academics/colleges/cs/#核心课程' },
-                { text: '实验室', link: '/academics/colleges/cs/#实验室介绍' },
+                { text: '软件工程', link: '/academics/colleges/cs/SWE' },
                 { text: '测试', link: '/academics/colleges/cs/test' },
                 { text: 'Markdown 演示', link: '/academics/colleges/cs/markdown-demo' }
               ]
@@ -86,7 +84,8 @@ export default defineConfig({
           text: '在线工具',
           items: [
             { text: 'GPA 计算器 ', link: '/tools/compute' },
-            { text: '倒计时', link: '/tools/time' }
+            { text: '倒计时', link: '/tools/time' },
+            { text: '实时 Markdown 编辑器', link: '/tools/md-editor' }
           ]
         }
       ]
