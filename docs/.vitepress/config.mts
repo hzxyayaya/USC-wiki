@@ -47,8 +47,8 @@ export default defineConfig({
         {
           text: '学院导航',
           items: [
-            { 
-              text: '计算机学院', 
+            {
+              text: '计算机学院',
               link: '/academics/colleges/cs/',
               collapsed: true,
               items: [
@@ -57,8 +57,8 @@ export default defineConfig({
                 { text: 'Markdown 演示', link: '/academics/colleges/cs/markdown-demo' }
               ]
             },
-            { 
-              text: '商学院', 
+            {
+              text: '商学院',
               link: '/academics/colleges/business/',
               collapsed: true
             }
@@ -71,7 +71,8 @@ export default defineConfig({
           items: [
             { text: '生活综述', link: '/life/' },
             { text: '吃喝出行', link: '/life/campus' },
-            { text: '校园网', link: '/life/network' }
+            { text: '校园网', link: '/life/network' },
+            { text: '时间表', link: '/life/xiaoli' }
           ]
         }
       ],

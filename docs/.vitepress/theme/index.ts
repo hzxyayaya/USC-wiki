@@ -9,8 +9,11 @@ import ComingSoon from '../components/ComingSoon.vue'
 import VditorEditor from '../components/VditorEditor.vue'
 import './tailwind.css'
 import './custom.css'
+import Layout from './Layout.vue'
+
 export default {
   extends: DefaultTheme,
+  Layout,
   enhanceApp({ app }: { app: App }) {
     // 注册全局组件
     app.component('GPACalculator', GPACalculator)
