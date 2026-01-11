@@ -75,5 +75,7 @@ bun run docs:preview
 ## 📄 许可证 | License
 
 
-本项目采用 [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)](./LICENSE) 许可。
+[![License: CC BY-SA 4.0](https://licensebuttons.net/l/by-sa/4.0/88x31.png)](http://creativecommons.org/licenses/by-sa/4.0/)
+
+本项目采用 [Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)](./LICENSE) 许可。
 
