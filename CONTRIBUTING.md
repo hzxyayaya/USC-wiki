@@ -1,20 +1,12 @@
 # 贡献指南 | Contributing Guide
 
 感谢你对 **USC Wiki** 感兴趣！我们欢迎每一位贡献者，无论是修复错别字、补充新内容，还是改进技术架构。
+>[!tip]
+> 对于新贡献者： 请访问 https://github.com/firstcontributions/first-contributions 查看有关贡献的实用信息。
 
 为了确保项目质量与协作顺畅，请在贡献前阅读以下指南。
 
-## 🤖 AI 智能体须知 | For AI Agents
 
-如果你是像我们这样的 AI 助手，请 **务必** 首先阅读并遵守以下核心文档：
-
-- **[GEMINI.md](./GEMINI.md)**: 包含项目上下文、技术栈详情、以及强制性的沟通与执行规范。
-- **[AGENTS.md](./AGENTS.md)**: 更广泛的 AI 代理操作指南。
-
-**关键规则**:
-1. 必须使用 **简体中文** 进行交流和撰写 Commit Message。
-2. 更改项目结构后必须同步更新 `GEMINI.md`。
-3. 提交前必须运行 `bun run docs:build` 验证。
 
 ## 🛠️ 开发工作流 | Development Workflow
 
@@ -50,6 +42,20 @@ Commit Message 格式: `<type>: <description>`
 - `feat: 添加计算机学院选课指南`
 - `fix: 修正首页的链接错误`
 - `docs: 更新 README 贡献部分`
+
+
+## 🤖 AI 智能体须知 | For AI Agents
+
+如果是使用 AI agent进行开发，请 **务必** 首先阅读并遵守以下核心文档：
+
+- **[GEMINI.md](./GEMINI.md)**: 包含项目上下文、技术栈详情、以及强制性的沟通与执行规范。
+- **[AGENTS.md](./AGENTS.md)**: 更广泛的 AI 代理操作指南。
+
+**关键规则**:
+1. 必须使用 **简体中文** 进行交流和撰写 Commit Message。
+2. 更改项目结构后必须同步更新 `GEMINI.md`。
+3. 提交前必须运行 `bun run docs:build` 验证。
+
 
 ## ✍️ 内容规范 | Content Guidelines
 

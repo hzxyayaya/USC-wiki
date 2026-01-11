@@ -1,0 +1,35 @@
+name: 🚀 Vercel PR Preview Deployment
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+jobs:
+  deploy_preview:
+    name: Deploy Preview to Vercel
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Use Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+
+      - name: Install Dependencies
+        run: bun install
+
+      - name: Build Static Site
+        # 根据你的项目实际构建命令调整，比如 VitePress 通常是 docs:build
+        run: bun run docs:build
+
+      - name: Deploy to Vercel and Comment Preview URL
+        uses: BetaHuhn/deploy-to-vercel-action@v1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERCEL_TOKEN:  ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          github-comment: true
