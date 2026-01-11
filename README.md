@@ -68,7 +68,9 @@ bun run docs:preview
 ## 🤝 贡献指南 | Contributing
 
 欢迎提交 Issue 或 Pull Request！
-在开始贡献代码前，请阅读 [GEMINI.md](./GEMINI.md) 了解开发规范与 AI 协作指南。
+欢迎提交 Issue 或 Pull Request！
+在开始贡献代码前，请阅读 [CONTRIBUTING.md](./CONTRIBUTING.md) 了解开发流程与规范。
+对于 AI 助手 (AI Agents)，请额外参阅 [GEMINI.md](./GEMINI.md)。
 
 ## 📄 许可证 | License
 
