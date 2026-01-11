@@ -75,7 +75,12 @@ bun run docs:preview
 ## 📄 许可证 | License
 
 
-[![License: CC BY-SA 4.0](https://licensebuttons.net/l/by-sa/4.0/88x31.png)](http://creativecommons.org/licenses/by-sa/4.0/)
 
-本项目采用 [Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)](./LICENSE) 许可。
+本项目采用双协议许可：
+
+*   **源代码** (Source Code) 采用 [MIT License](https://opensource.org/licenses/MIT) 许可。
+*   **文档内容** (Documentation) 采用 [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)](http://creativecommons.org/licenses/by-nc-sa/4.0/) 许可。
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![License: CC BY-NC-SA 4.0](https://licensebuttons.net/l/by-nc-sa/4.0/88x31.png)](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 
