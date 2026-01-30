@@ -3,8 +3,40 @@ import mathjax3 from 'markdown-it-mathjax3'
 import taskLists from 'markdown-it-task-lists'
 import footnote from 'markdown-it-footnote'
 import mark from 'markdown-it-mark'
+import fs from 'node:fs'
+import path from 'node:path'
 
 import wikilinks from './plugins/wikilinks'
+
+// Helper to generate filename -> path map for Wikilinks
+function getPermalinks(dir: string, root = ''): Record<string, string> {
+  let map: Record<string, string> = {}
+  const files = fs.readdirSync(dir)
+
+  for (const file of files) {
+    const fullPath = path.join(dir, file)
+    const stat = fs.statSync(fullPath)
+
+    if (stat.isDirectory()) {
+      if (file === '.vitepress' || file === 'public' || file === 'node_modules' || file.startsWith('.')) continue
+      Object.assign(map, getPermalinks(fullPath, path.join(root, file)))
+    } else {
+      const name = path.basename(file, path.extname(file))
+      // Also index with extension for exact matching if needed, 
+      // but wikilinks logic usually strips extension or tries exact match.
+      // Let's store both "Filename" and "Filename.ext" mapping to the same path.
+
+      const webPath = '/' + path.join(root, file).split(path.sep).join('/')
+      const nameWithoutExt = path.basename(file, path.extname(file))
+
+      map[nameWithoutExt] = webPath
+      map[file] = webPath
+    }
+  }
+  return map
+}
+
+const docsParams = getPermalinks(path.resolve(__dirname, '../'))
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -19,7 +51,7 @@ export default defineConfig({
       md.use(taskLists)
       md.use(footnote)
       md.use(mark)
-      md.use(wikilinks)
+      md.use(wikilinks, { permalinks: docsParams })
     }
   },
   themeConfig: {
@@ -43,7 +75,8 @@ export default defineConfig({
           text: '教务指南',
           items: [
             { text: '综述', link: '/academics/' },
-            { text: '选课攻略', link: '/academics/enrollment' },
+            { text: '选课指南', link: '/academics/选课指南' },
+            { text: '课程安排', link: '/academics/课程安排' },
             { text: 'GPA 政策', link: '/academics/gpa' }
           ]
         },
@@ -66,6 +99,17 @@ export default defineConfig({
               collapsed: true
             }
           ]
+        },
+        {
+          text: '课程信息',
+          collapsed: true,
+          items: [
+            { text: '大学生心理健康教育与指导', link: '/academics/course/大学生心理健康教育与指导' },
+            { text: '军事技能', link: '/academics/course/军事技能' },
+            { text: '大学生职业发展与就业指导', link: '/academics/course/大学生职业发展与就业指导' },
+            { text: 'C++ 程序设计', link: '/academics/course/C++程序设计' },
+            { text: '计算机科学导论', link: '/academics/course/计算机科学导论' }
+          ]
         }
       ],
       '/life/': [
@@ -86,6 +130,12 @@ export default defineConfig({
             { text: '软件推荐', link: '/resources/software' },
             { text: '常用模板', link: '/resources/templates' },
             { text: '证书报名', link: '/resources/certificates' }
+          ]
+        },
+        {
+          text: '课程资源',
+          items: [
+            { text: '线性代数', link: '/resources/课程资源/线性代数' }
           ]
         }
       ],
@@ -108,6 +158,12 @@ export default defineConfig({
     footer: {
       message: '由 VitePress 驱动',
       copyright: 'Copyright © 2025 USC Wiki Team'
+    }
+  },
+  transformPageData(page) {
+    if (!page.title) {
+      page.title = path.basename(page.filePath, '.md')
+      page.frontmatter.generatedTitle = true
     }
   },
   ignoreDeadLinks: true

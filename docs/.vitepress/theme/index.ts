@@ -7,6 +7,7 @@ import HomeEnhancement from '../components/HomeEnhancement.vue'
 import LiveEditor from '../components/LiveEditor.vue'
 import ComingSoon from '../components/ComingSoon.vue'
 import VditorEditor from '../components/VditorEditor.vue'
+import ResourceCard from '../components/ResourceCard.vue'
 import './tailwind.css'
 import './custom.css'
 import Layout from './Layout.vue'
@@ -22,6 +23,7 @@ export default {
     app.component('LiveEditor', LiveEditor)
     app.component('ComingSoon', ComingSoon)
     app.component('VditorEditor', VditorEditor)
+    app.component('ResourceCard', ResourceCard)
   }
 }
 
