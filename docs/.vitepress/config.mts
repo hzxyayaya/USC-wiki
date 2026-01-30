@@ -5,38 +5,72 @@ import footnote from 'markdown-it-footnote'
 import mark from 'markdown-it-mark'
 import fs from 'node:fs'
 import path from 'node:path'
+import { viteStaticCopy } from 'vite-plugin-static-copy'
 
 import wikilinks from './plugins/wikilinks'
 
 // Helper to generate filename -> path map for Wikilinks
-function getPermalinks(dir: string, root = ''): Record<string, string> {
+// Helper to generate filename -> path map for Wikilinks
+function getPermalinks(dir: string, root = '', ignorePublic = true): Record<string, string> {
   let map: Record<string, string> = {}
-  const files = fs.readdirSync(dir)
+  try {
+    const files = fs.readdirSync(dir)
 
-  for (const file of files) {
-    const fullPath = path.join(dir, file)
-    const stat = fs.statSync(fullPath)
+    for (const file of files) {
+      const fullPath = path.join(dir, file)
+      const stat = fs.statSync(fullPath)
 
-    if (stat.isDirectory()) {
-      if (file === '.vitepress' || file === 'public' || file === 'node_modules' || file.startsWith('.')) continue
-      Object.assign(map, getPermalinks(fullPath, path.join(root, file)))
-    } else {
-      const name = path.basename(file, path.extname(file))
-      // Also index with extension for exact matching if needed, 
-      // but wikilinks logic usually strips extension or tries exact match.
-      // Let's store both "Filename" and "Filename.ext" mapping to the same path.
+      if (stat.isDirectory()) {
+        if (file === '.vitepress' || file === 'node_modules' || file.startsWith('.')) continue
+        if (ignorePublic && file === 'public') continue
 
-      const webPath = '/' + path.join(root, file).split(path.sep).join('/')
-      const nameWithoutExt = path.basename(file, path.extname(file))
+        Object.assign(map, getPermalinks(fullPath, path.join(root, file), ignorePublic))
+      } else {
+        const webPath = '/' + path.join(root, file).split(path.sep).join('/')
+        const nameWithoutExt = path.basename(file, path.extname(file))
 
-      map[nameWithoutExt] = webPath
-      map[file] = webPath
+        map[nameWithoutExt] = webPath
+        map[file] = webPath
+      }
     }
+  } catch (e) {
+    // ignore if dir doesn't exist
   }
+  return map
   return map
 }
 
-const docsParams = getPermalinks(path.resolve(__dirname, '../'))
+// Helper to find all 'attachment' directories for static copy
+function getAttachmentConfigs(dir: string, root = ''): { src: string, dest: string }[] {
+  let configs: { src: string, dest: string }[] = []
+  try {
+    const files = fs.readdirSync(dir)
+    for (const file of files) {
+      const fullPath = path.join(dir, file)
+      const stat = fs.statSync(fullPath)
+      if (stat.isDirectory()) {
+        if (file === '.vitepress' || file === 'node_modules' || file.startsWith('.')) continue
+        if (file === 'attachment') {
+          configs.push({
+            src: path.join(fullPath, '*').replace(/\\/g, '/'),
+            dest: path.join(root, file).replace(/\\/g, '/')
+          })
+        } else {
+          configs = configs.concat(getAttachmentConfigs(fullPath, path.join(root, file)))
+        }
+      }
+    }
+  } catch (e) { }
+  return configs
+}
+
+const docsDir = path.resolve(__dirname, '../')
+const publicDir = path.resolve(docsDir, 'public')
+
+const docsParams = {
+  ...getPermalinks(docsDir, '', true),
+  ...getPermalinks(publicDir, '', false)
+}
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -166,5 +200,12 @@ export default defineConfig({
       page.frontmatter.generatedTitle = true
     }
   },
-  ignoreDeadLinks: true
+  ignoreDeadLinks: true,
+  vite: {
+    plugins: [
+      viteStaticCopy({
+        targets: getAttachmentConfigs(docsDir)
+      })
+    ]
+  }
 })
