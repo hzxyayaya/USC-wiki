@@ -186,7 +186,7 @@ export default defineConfig({
     },
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/vuejs/vitepress' }
+      { icon: 'github', link: 'https://github.com/hzxyayaya/USC-wiki' }
     ],
 
     footer: {
