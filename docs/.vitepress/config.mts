@@ -4,6 +4,8 @@ import taskLists from 'markdown-it-task-lists'
 import footnote from 'markdown-it-footnote'
 import mark from 'markdown-it-mark'
 
+import wikilinks from './plugins/wikilinks'
+
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: "USC Wiki",
@@ -17,6 +19,7 @@ export default defineConfig({
       md.use(taskLists)
       md.use(footnote)
       md.use(mark)
+      md.use(wikilinks)
     }
   },
   themeConfig: {
@@ -106,5 +109,6 @@ export default defineConfig({
       message: '由 VitePress 驱动',
       copyright: 'Copyright © 2025 USC Wiki Team'
     }
-  }
+  },
+  ignoreDeadLinks: true
 })
