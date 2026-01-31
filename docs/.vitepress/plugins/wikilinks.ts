@@ -1,6 +1,73 @@
 import type MarkdownIt from 'markdown-it'
 
 export default function wikilinks(md: MarkdownIt, options?: { permalinks?: Record<string, string> }) {
+    // WikiLink Image Rule: ![[Image.png]]
+    md.inline.ruler.before('image', 'wikilink_image', (state, silent) => {
+        const src = state.src
+        const pos = state.pos
+
+        if (src.charCodeAt(pos) !== 0x21 /* ! */ ||
+            src.charCodeAt(pos + 1) !== 0x5B /* [ */ ||
+            src.charCodeAt(pos + 2) !== 0x5B /* [ */) {
+            return false
+        }
+
+        const closeStart = src.indexOf(']]', pos + 3)
+        if (closeStart === -1) {
+            return false
+        }
+
+        const content = src.slice(pos + 3, closeStart)
+        if (content.includes('\n')) {
+            return false
+        }
+
+        if (!silent) {
+            let target = content
+            let label = content
+            const splitIndex = content.indexOf('|')
+            if (splitIndex !== -1) {
+                target = content.slice(0, splitIndex)
+                label = content.slice(splitIndex + 1)
+            }
+
+            let href = target.trim()
+
+            // Try to resolve against permalinks
+            // Check both raw href and decoded key
+            if (options?.permalinks) {
+                if (options.permalinks[href]) {
+                    href = options.permalinks[href]
+                } else {
+                    // Try decoding and exact match logic similar to resolve_links core rule
+                    let key = decodeURI(href)
+                    // If image, we usually don't strip extension?
+                    // getPermalinks indexes both "name" and "name.ext".
+                    // So key should match.
+                    if (options.permalinks[key]) {
+                        href = options.permalinks[key]
+                    }
+                }
+            }
+
+            const token = state.push('image', 'img', 0)
+            token.attrs = [
+                ['src', href],
+                ['alt', label.trim()]
+            ]
+            // Allow children (alt text) to be processed? 
+            // Standard image token has children.
+            token.children = []
+            // Push text token for alt
+            const textToken = new state.Token('text', '', 0)
+            textToken.content = label.trim()
+            token.children.push(textToken)
+        }
+
+        state.pos = closeStart + 2
+        return true
+    })
+
     md.inline.ruler.after('link', 'wikilink', (state, silent) => {
         const src = state.src
         const pos = state.pos
