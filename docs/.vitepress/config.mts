@@ -169,7 +169,11 @@ export default defineConfig({
         {
           text: '课程资源',
           items: [
-            { text: '线性代数', link: '/resources/课程资源/线性代数' }
+            { text: '线性代数', link: '/resources/课程资源/线性代数' },
+            { text: '高等数学', link: '/resources/课程资源/高等数学' },
+            { text: '概率论', link: '/resources/课程资源/概率论' },
+            { text: '离散数学', link: '/resources/课程资源/离散数学' },
+            { text: '数据结构', link: '/resources/课程资源/数据结构' }
           ]
         }
       ],
