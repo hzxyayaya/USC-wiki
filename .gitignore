@@ -3,6 +3,9 @@ node_modules/
 
 # Build output
 dist/
+.astro/
+public/vault/
+src/content/docs/
 docs/.vitepress/dist/
 docs/.vitepress/cache/
 
@@ -30,3 +33,16 @@ Thumbs.db
 
 # Obsidian
 .obsidian/
+
+# Playwright
+.playwright-cli/
+.playwright-mcp/
+
+# codex
+.omx/
+
+# kiro
+.kiro/
+
+.history/
+.tmp-starlight-template/

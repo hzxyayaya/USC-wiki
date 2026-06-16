@@ -1,0 +1,42 @@
+@layer starlight.user {
+	.contains-task-list {
+		padding-inline-start: 0;
+		list-style: none;
+	}
+
+	.task-list-item {
+		list-style: none;
+	}
+
+	.task-list-item input[type='checkbox'] {
+		margin-inline: 0 0.5rem;
+	}
+}
+
+/* Task lists: disable Galaxy theme custom bullets on checkbox items */
+.sl-markdown-content ul.contains-task-list,
+.sl-markdown-content ul.contains-task-list > li.task-list-item {
+	list-style: none !important;
+	padding-left: 0 !important;
+}
+
+.sl-markdown-content ul.contains-task-list > li.task-list-item::before {
+	content: none !important;
+	display: none !important;
+}
+
+.sl-markdown-content li.task-list-item {
+	display: flex;
+	align-items: flex-start;
+	gap: 0.5rem;
+}
+
+.sl-markdown-content li.task-list-item input[type='checkbox'] {
+	flex: 0 0 auto;
+	margin: 0.15em 0 0;
+	accent-color: rgb(var(--callout-success, 8 185 78));
+}
+
+.sl-markdown-content li.task-list-item:has(input[type='checkbox']:checked) {
+	opacity: 0.7;
+}

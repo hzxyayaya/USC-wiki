@@ -1,0 +1,52 @@
+@layer starlight.user {
+	mark {
+		background: color-mix(in srgb, var(--sl-color-orange-high) 35%, transparent);
+		color: inherit;
+		padding: 0.05em 0.25em;
+		border-radius: 0.2em;
+	}
+
+	.wiki-embed-image {
+		display: block;
+		max-width: 100%;
+		height: auto;
+		margin-block: 0.75rem;
+		border-radius: var(--callout-radius, 4px);
+	}
+
+	.wiki-embed-missing {
+		margin-block: 0.75rem;
+		padding: 0.75rem 1rem;
+		border-radius: var(--callout-radius, 4px);
+		border: 1px dashed color-mix(in srgb, var(--sl-color-orange-high) 55%, transparent);
+		background: color-mix(in srgb, var(--sl-color-orange-high) 12%, transparent);
+		color: var(--sl-color-orange-high);
+		font-size: 0.95em;
+	}
+
+	.wiki-link {
+		text-decoration: none;
+	}
+
+	.wiki-link:hover {
+		text-decoration: underline;
+	}
+
+	.wiki-link-attachment::after {
+		content: ' ↗';
+		font-size: 0.85em;
+		opacity: 0.75;
+	}
+
+	.wiki-link-unresolved {
+		color: var(--sl-color-orange-high);
+		border-bottom: 1px dashed color-mix(in srgb, var(--sl-color-orange-high) 60%, transparent);
+		cursor: help;
+	}
+
+	.katex-display {
+		overflow-x: auto;
+		overflow-y: hidden;
+		padding-block: 0.25rem;
+	}
+}

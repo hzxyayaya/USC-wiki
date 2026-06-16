@@ -1,0 +1,286 @@
+---
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import { getCollection } from 'astro:content';
+
+const docs = await getCollection('docs');
+const noteCount = docs.length;
+
+const sections = [
+	{
+		title: '学业指南',
+		description: '课程、选课、GPA、学院与实训相关笔记。',
+		href: '/academics/',
+		accent: 'blue',
+	},
+	{
+		title: '校园生活',
+		description: '校园网、校历、常用软件与校内生活信息。',
+		href: '/life/',
+		accent: 'green',
+	},
+	{
+		title: '资源分享',
+		description: '竞赛、证书、模板、课程资料与常用文件。',
+		href: '/resources/',
+		accent: 'amber',
+	},
+	{
+		title: '在线工具',
+		description: '面向学习规划和日常效率的小工具集合。',
+		href: '/tools/',
+		accent: 'violet',
+	},
+];
+
+const highlights = [
+	{ title: '选课指南', href: '/academics/选课指南/' },
+	{ title: 'GPA', href: '/academics/gpa/' },
+	{ title: '校园生活指南', href: '/life/campus/' },
+	{ title: '软件推荐', href: '/resources/software/' },
+	{ title: '模板下载', href: '/resources/templates/' },
+	{ title: '在线工具', href: '/tools/' },
+];
+---
+
+<StarlightPage
+	frontmatter={{
+		title: 'USC Wiki',
+		description: '南华大学校园知识库',
+		template: 'splash',
+		editUrl: false,
+	}}
+>
+	<section class="home-hero">
+		<div class="hero-copy">
+			<p class="eyebrow">USC Wiki</p>
+			<h1>南华大学校园知识库</h1>
+			<p class="lead">把课程攻略、资源分享、校园生活和实用工具整理成一个更像 Obsidian 的入口。</p>
+			<div class="hero-actions">
+				<a class="primary-action" href="/academics/">进入学业指南</a>
+				<a class="secondary-action" href="/resources/">浏览资源</a>
+			</div>
+		</div>
+		<div class="hero-panel" aria-label="站点概览">
+			<span>当前收录</span>
+			<strong>{noteCount}</strong>
+			<span>篇笔记</span>
+		</div>
+	</section>
+
+	<section class="section-grid" aria-label="分类入口">
+		{sections.map((section) => (
+			<a class={`section-card ${section.accent}`} href={section.href}>
+				<h2>{section.title}</h2>
+				<p>{section.description}</p>
+			</a>
+		))}
+	</section>
+
+	<section class="quick-links" aria-label="常用入口">
+		<h2>常用入口</h2>
+		<div>
+			{highlights.map((item) => (
+				<a href={item.href}>{item.title}</a>
+			))}
+		</div>
+	</section>
+</StarlightPage>
+
+<style>
+	:global(h1#_top) {
+		display: none;
+	}
+
+	.home-hero {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) 220px;
+		gap: 2rem;
+		align-items: end;
+		padding: clamp(1.75rem, 5vw, 4rem) 0 2.5rem;
+	}
+
+	.eyebrow {
+		margin: 0 0 0.75rem;
+		color: var(--sl-color-accent-high);
+		font-weight: 700;
+	}
+
+	.home-hero h1 {
+		max-width: 760px;
+		margin: 0;
+		font-size: clamp(2.25rem, 5.2vw, 4.6rem);
+		line-height: 1.05;
+		text-wrap: balance;
+	}
+
+	.lead {
+		max-width: 620px;
+		margin: 1.25rem 0 0;
+		color: var(--sl-color-gray-2);
+		font-size: 1.2rem;
+		line-height: 1.7;
+	}
+
+	.hero-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		margin-top: 2rem;
+	}
+
+	.primary-action,
+	.secondary-action,
+	.quick-links a {
+		border-radius: 8px;
+		text-decoration: none;
+	}
+
+	.primary-action,
+	.secondary-action {
+		display: inline-flex;
+		align-items: center;
+		min-height: 2.75rem;
+		padding: 0.65rem 1rem;
+		font-weight: 700;
+	}
+
+	.primary-action {
+		background: var(--sl-color-accent-high);
+		color: var(--sl-color-black);
+	}
+
+	.secondary-action {
+		border: 1px solid var(--sl-color-gray-5);
+		color: var(--sl-color-white);
+	}
+
+	.hero-panel {
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: 8px;
+		padding: 1.25rem;
+		background: color-mix(in srgb, var(--sl-color-bg), var(--sl-color-accent-low) 10%);
+	}
+
+	.hero-panel span,
+	.hero-panel strong {
+		display: block;
+	}
+
+	.hero-panel span {
+		color: var(--sl-color-gray-2);
+	}
+
+	.hero-panel strong {
+		margin: 0.35rem 0;
+		color: var(--sl-color-white);
+		font-size: 3rem;
+		line-height: 1;
+	}
+
+	.section-grid {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		gap: 1rem;
+		margin-top: 1.5rem;
+	}
+
+	.section-card {
+		display: block;
+		min-height: 180px;
+		border: 1px solid var(--sl-color-gray-5);
+		border-top: 4px solid var(--accent-line);
+		border-radius: 8px;
+		padding: 1.1rem;
+		background:
+			linear-gradient(180deg, color-mix(in srgb, var(--accent-line), transparent 88%), transparent 55%),
+			color-mix(in srgb, var(--sl-color-bg), var(--sl-color-gray-6) 42%);
+		color: inherit;
+		text-decoration: none;
+		transition:
+			border-color 160ms ease,
+			transform 160ms ease,
+			box-shadow 160ms ease;
+	}
+
+	.section-card:hover {
+		border-color: var(--accent-line);
+		box-shadow: 0 10px 30px color-mix(in srgb, var(--accent-line), transparent 84%);
+		transform: translateY(-2px);
+	}
+
+	.section-card:focus-visible {
+		outline: 2px solid var(--accent-line);
+		outline-offset: 3px;
+	}
+
+	.section-card h2 {
+		margin: 0;
+		font-size: 1.15rem;
+		text-decoration: none;
+	}
+
+	.section-card p {
+		margin: 0.75rem 0 0;
+		color: var(--sl-color-gray-2);
+		line-height: 1.65;
+		text-decoration: none;
+	}
+
+	.section-card.blue {
+		--accent-line: #79a7ff;
+	}
+
+	.section-card.green {
+		--accent-line: #7bd88f;
+	}
+
+	.section-card.amber {
+		--accent-line: #f3be62;
+	}
+
+	.section-card.violet {
+		--accent-line: #b6a0ff;
+	}
+
+	.quick-links {
+		margin-top: 2.5rem;
+		padding-bottom: 3rem;
+	}
+
+	.quick-links h2 {
+		margin: 0 0 1rem;
+		font-size: 1.25rem;
+	}
+
+	.quick-links div {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+	}
+
+	.quick-links a {
+		border: 1px solid var(--sl-color-gray-5);
+		padding: 0.55rem 0.8rem;
+		color: var(--sl-color-white);
+		background: color-mix(in srgb, var(--sl-color-bg), var(--sl-color-gray-6) 45%);
+		transition:
+			border-color 160ms ease,
+			background 160ms ease;
+	}
+
+	.quick-links a:hover {
+		border-color: var(--sl-color-accent-high);
+		background: color-mix(in srgb, var(--sl-color-bg), var(--sl-color-accent-low) 12%);
+	}
+
+	@media (max-width: 900px) {
+		.home-hero,
+		.section-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.hero-panel {
+			max-width: 260px;
+		}
+	}
+</style>

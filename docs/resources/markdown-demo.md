@@ -1,4 +1,7 @@
-# Markdown 格式演示 📝
+---
+title: Markdown 格式演示
+---
+
 
 本页面展示了本 Wiki 支持的所有 Markdown 格式和扩展语法。
 
@@ -10,7 +13,7 @@
 - *斜体文本* 使用 `*文字*`
 - ***粗斜体*** 使用 `***文字***`
 - ~~删除线~~ 使用 `~~文字~~`
-- ==高亮文本== 使用 `==文字==`（如果支持）
+- ==高亮文本== 使用 `==文字==`（Obsidian 语法）
 
 ### 引用
 
@@ -93,8 +96,8 @@ print(f"GPA: {calculate_gpa(courses):.2f}")
 
 ```bash
 # Shell 命令示例
-npm install vitepress
-npm run docs:dev
+pnpm install
+pnpm dev
 ```
 
 ## 链接和图片
@@ -108,7 +111,7 @@ npm run docs:dev
 
 ### 图片
 
-![VitePress Logo](https://vitepress.dev/vitepress-logo-large.webp)
+![Astro Logo|160](https://astro.build/assets/press/astro-icon-light.svg)
 
 ## 表格
 
@@ -140,7 +143,7 @@ $$
 GPA 计算公式：
 
 $$
-GPA = \frac{\sum_{i=1}^{n} (学分_i \times 绩点_i)}{\sum_{i=1}^{n} 学分_i}
+GPA = \frac{\sum_{i=1}^{n} (\text{学分}_i \times \text{绩点}_i)}{\sum_{i=1}^{n} \text{学分}_i}
 $$
 
 矩阵示例：
@@ -162,37 +165,72 @@ $$
 [^1]: 这是第一个脚注的内容，会显示在页面底部。
 [^2]: 脚注可以包含更详细的解释或引用来源。
 
-## VitePress 提示框
+## Wiki 链接
 
-::: info 信息
-这是一条普通的信息提示。
-:::
+Obsidian 风格内部链接，语法参考[官方文档](https://obsidian.md/zh/help/obsidian-flavored-markdown)。
 
-::: tip
-这是一个有用的小技巧！
-:::
+- 链接到其他页面：[[gpa]]、[[resources/templates|模板下载]]
+- 链接到附件：[[attachments/Pasted image 20260327194126.png|示例图片文件]]
+- 带标题锚点：[[resources/markdown-demo#callout-提示框|Callout 章节]]
 
-::: warning 警告
-请注意这个潜在的问题。
-:::
+## 图片嵌入
 
-::: danger 危险
-这是一个危险操作，请谨慎！
-:::
+Obsidian 风格图片嵌入，语法参考[官方文档](https://obsidian.md/zh/help/embeds#%E5%9C%A8%E7%AC%94%E8%AE%B0%E4%B8%AD%E6%8F%92%E5%85%A5%E5%9B%BE%E7%89%87)。
 
-::: details 点击展开详情
-这里是被折叠的内容。
+### Wiki 链接嵌入
 
-可以包含：
-- 列表
-- **格式化文本**
-- `代码`
+![[attachments/Pasted image 20260327194126.png]]
 
-```js
-// 甚至可以包含代码块
-console.log('展开查看');
-```
-:::
+指定宽度（等比缩放）：
+
+![[attachments/Pasted image 20260327194126.png|240]]
+
+指定宽高：
+
+![[attachments/Pasted image 20260327194126.png|180x120]]
+
+### Markdown 网络图片
+
+![250](https://astro.build/assets/press/astro-icon-light.svg)
+
+## Callout 提示框
+
+Obsidian 风格 Callout，语法为 `> [!类型] 标题`（[官方文档](https://obsidian.md/zh/help/callouts)）。
+
+> [!note] 信息
+> 这是一条普通的信息提示。
+
+> [!info] 说明
+> 用于补充说明性内容。
+
+> [!tip] 技巧
+> 这是一个有用的小技巧。
+
+> [!success] 完成
+> 操作已成功执行。
+
+> [!question] 常见问题
+> Callout 是否支持折叠？支持，见下方示例。
+
+> [!warning] 注意
+> 请注意这个潜在的问题。
+
+> [!danger] 危险
+> 这是一个危险操作，请谨慎。
+
+> [!quote] 引用
+> 这是一段引用风格的 Callout。
+
+> [!tip]- 点击展开详情
+> 这里是被折叠的内容。
+>
+> 可以包含：
+> - 列表
+> - **格式化文本**
+> - `代码`
+
+> [!faq]+ 默认展开的折叠 Callout
+> 在类型后加 `+` 可默认展开，加 `-` 则默认折叠。
 
 ## 分隔线
 
@@ -236,30 +274,22 @@ console.log('展开查看');
 
 <sup>上标文本</sup> 和 <sub>下标文本</sub>
 
-## 自定义 Vue 组件
-
-### GPA 计算器
-
-<GPACalculator />
-
-### 倒计时
-
-<Countdown targetDate="2025-12-31" eventName="元旦" />
-
----
-
 ## 总结
 
 本页面涵盖了以下 Markdown 功能：
 
 | 功能 | 语法 | 状态 |
 | :--- | :--- | :---: |
-| 基础格式 | `**粗体**` `*斜体*` | ✅ |
+| 基础格式 | `**粗体**` `*斜体*` `==高亮==` | ✅ |
 | 列表 | `-` `1.` | ✅ |
 | 任务列表 | `- [x]` `- [ ]` | ✅ |
 | 代码块 | ` ``` ` | ✅ |
 | 表格 | `\| \|` | ✅ |
 | 数学公式 | `$` `$$` | ✅ |
 | 脚注 | `[^1]` | ✅ |
-| 提示框 | `::: tip` | ✅ |
-| Vue 组件 | `<Component />` | ✅ |
+| Wiki 链接 | `[[页面]]` / `[[文件.pdf]]` / `[[页面\|别名]]` | ✅ |
+| 图片嵌入 | `![[image.png]]` / `![[image.png\|240]]` | ✅ |
+| 网络图片尺寸 | `![250](https://...)` | ✅ |
+| Callout | `> [!tip] 标题` | ✅ |
+| 折叠 Callout | `> [!tip]- 标题` / `> [!tip]+ 标题` | ✅ |
+| Callout 类型 | note / info / tip / warning / danger / quote 等 | ✅ |

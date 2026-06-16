@@ -1,0 +1,115 @@
+@layer starlight.user {
+	.sl-markdown-content img.wiki-image-zoomable {
+		cursor: zoom-in;
+		transition:
+			box-shadow 160ms ease,
+			transform 160ms ease;
+	}
+
+	.sl-markdown-content img.wiki-image-zoomable:hover {
+		box-shadow: 0 8px 28px color-mix(in srgb, var(--sl-color-black) 35%, transparent);
+	}
+
+	.sl-markdown-content img.wiki-image-zoomable:focus-visible {
+		outline: 2px solid var(--sl-color-accent-high);
+		outline-offset: 3px;
+	}
+}
+
+body.wiki-image-lightbox-open {
+	overflow: hidden;
+}
+
+.wiki-image-lightbox {
+	position: fixed;
+	inset: 0;
+	z-index: 1000;
+	display: grid;
+	place-items: center;
+	padding: clamp(1rem, 3vw, 2rem);
+}
+
+.wiki-image-lightbox[hidden] {
+	display: none !important;
+}
+
+.wiki-image-lightbox__backdrop {
+	position: absolute;
+	inset: 0;
+	border: 0;
+	background: color-mix(in srgb, var(--sl-color-black) 72%, transparent);
+	cursor: zoom-out;
+}
+
+.wiki-image-lightbox__panel {
+	position: relative;
+	z-index: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.75rem;
+	max-width: min(96vw, 1200px);
+	max-height: 92vh;
+}
+
+.wiki-image-lightbox__image {
+	display: block;
+	max-width: min(96vw, 1200px);
+	max-height: calc(92vh - 3rem);
+	width: auto;
+	height: auto;
+	object-fit: contain;
+	border-radius: var(--callout-radius, 4px);
+	box-shadow: 0 18px 48px color-mix(in srgb, var(--sl-color-black) 45%, transparent);
+	cursor: zoom-out;
+	background: var(--sl-color-bg);
+}
+
+.wiki-image-lightbox__caption {
+	margin: 0;
+	max-width: min(96vw, 720px);
+	color: var(--sl-color-gray-1);
+	font-size: var(--sl-text-sm, 0.875rem);
+	line-height: 1.5;
+	text-align: center;
+	text-wrap: pretty;
+}
+
+.wiki-image-lightbox__caption[hidden] {
+	display: none;
+}
+
+.wiki-image-lightbox__close {
+	position: absolute;
+	top: -0.25rem;
+	right: -0.25rem;
+	z-index: 2;
+	display: grid;
+	place-items: center;
+	width: 2.25rem;
+	height: 2.25rem;
+	border: 1px solid var(--sl-color-gray-5);
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--sl-color-bg) 88%, transparent);
+	color: var(--sl-color-white);
+	font-size: 1.35rem;
+	line-height: 1;
+	cursor: pointer;
+}
+
+.wiki-image-lightbox__close:hover {
+	border-color: var(--sl-color-accent-high);
+	color: var(--sl-color-accent-high);
+}
+
+.wiki-image-lightbox__close:focus-visible {
+	outline: 2px solid var(--sl-color-accent-high);
+	outline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+	.wiki-image-lightbox__close {
+		top: 0.5rem;
+		right: 0.5rem;
+	}
+}
