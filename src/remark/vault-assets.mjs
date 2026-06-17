@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const docsRoot = path.resolve('docs');
-const ignoredDirs = new Set(['.obsidian', '.vitepress', 'superpowers', 'public', 'static']);
+const ignoredDirs = new Set(['.obsidian', '.vitepress', 'superpowers', 'public', 'static', '_templates']);
 const markdownExtensions = new Set(['.md', '.mdx']);
 export const vaultFileExtensions = new Set([
 	'.png',

@@ -12,6 +12,7 @@ export const collections = {
 				'!.obsidian/**',
 				'!.vitepress/**',
 				'!superpowers/**',
+				'!_templates/**',
 				'!public/**',
 				'!static/**',
 			],

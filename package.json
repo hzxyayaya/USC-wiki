@@ -5,11 +5,15 @@
   "description": "Astro Starlight campus wiki",
   "scripts": {
     "sync:vault": "node scripts/sync-vault-assets.mjs",
-    "predev": "pnpm run sync:vault",
+    "sync:pagefind": "node scripts/sync-pagefind.mjs",
+    "search:build": "pnpm run build && pnpm run sync:pagefind",
+    "ensure:search": "node scripts/ensure-search-index.mjs",
+    "predev": "pnpm run sync:vault && pnpm run ensure:search",
     "dev": "astro dev",
     "start": "astro dev",
     "prebuild": "pnpm run sync:vault",
     "build": "astro build",
+    "postbuild": "pnpm run sync:pagefind",
     "preview": "astro preview",
     "astro": "astro"
   },

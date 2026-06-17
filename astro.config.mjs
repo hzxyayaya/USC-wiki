@@ -12,25 +12,57 @@ import { rehypeWikiImageEmbeds } from './src/rehype/wiki-image-embeds.mjs';
 import { rehypeWikiLinks } from './src/rehype/wiki-links.mjs';
 
 const docsRoot = path.resolve('docs');
-const ignoredDirs = new Set(['.obsidian', '.vitepress', 'superpowers', 'public', 'static']);
+const ignoredDirs = new Set(['.obsidian', '.vitepress', 'superpowers', 'public', 'static', '_templates']);
 
 /**
  * @typedef {{ label: string, link: string } | { label: string, collapsed: boolean, items: SidebarItem[] }} SidebarItem
  */
 
 /**
- * @param {string} filePath
+ * @typedef {{ title: string, order: number | null, label: string | null }} DocMeta
  */
-function parseTitle(filePath) {
-	const content = fs.readFileSync(filePath, 'utf-8');
-	const frontmatter = content.match(/^---\r?\n([\s\S]*?)\r?\n---/)?.[1];
-	const title = frontmatter?.match(/^title\s*:\s*(.+)$/m)?.[1];
 
-	return (
-		title?.trim().replace(/^['"]|['"]$/g, '') ||
+const isIndexFile = (name) => name === 'index.md' || name === 'index.mdx';
+
+function stripQuotes(value) {
+	return value?.trim().replace(/^['"]|['"]$/g, '');
+}
+
+/**
+ * 读取文档 frontmatter，支持顶层 `order` 与 Starlight 风格的 `sidebar.order` / `sidebar.label`。
+ * @param {string} filePath
+ * @returns {DocMeta}
+ */
+function parseDocMeta(filePath) {
+	const content = fs.readFileSync(filePath, 'utf-8');
+	const frontmatter = content.match(/^---\r?\n([\s\S]*?)\r?\n---/)?.[1] ?? '';
+
+	const title =
+		stripQuotes(frontmatter.match(/^title\s*:\s*(.+)$/m)?.[1]) ||
 		content.match(/^#\s+(.+)$/m)?.[1]?.trim() ||
-		path.basename(filePath, path.extname(filePath))
-	);
+		path.basename(filePath, path.extname(filePath));
+
+	const sidebarBlock = frontmatter.match(/^sidebar\s*:\s*\r?\n((?:[ \t]+.+\r?\n?)*)/m)?.[1] ?? '';
+	const orderRaw =
+		frontmatter.match(/^order\s*:\s*(-?\d+(?:\.\d+)?)\s*$/m)?.[1] ??
+		sidebarBlock.match(/order\s*:\s*(-?\d+(?:\.\d+)?)/)?.[1];
+	const order = orderRaw === undefined ? null : Number(orderRaw);
+	const label = stripQuotes(sidebarBlock.match(/label\s*:\s*(.+)/)?.[1]) || null;
+
+	return { title, order, label };
+}
+
+/**
+ * 读取目录的展示信息（取目录内 index.md 的标题/排序），无 index.md 时回退到目录名。
+ * @param {string} dir
+ * @returns {DocMeta}
+ */
+function parseDirMeta(dir) {
+	for (const indexName of ['index.md', 'index.mdx']) {
+		const indexPath = path.join(dir, indexName);
+		if (fs.existsSync(indexPath)) return parseDocMeta(indexPath);
+	}
+	return { title: path.basename(dir), order: null, label: null };
 }
 
 /**
@@ -46,15 +78,20 @@ function slugFromFile(filePath) {
 }
 
 /**
- * @param {fs.Dirent} a
- * @param {fs.Dirent} b
+ * @param {{ name: string, isDir: boolean, order: number | null, sortLabel: string }} a
+ * @param {{ name: string, isDir: boolean, order: number | null, sortLabel: string }} b
  */
-function sortDirectoryEntries(a, b) {
-	if (a.name === 'index.md' || a.name === 'index.mdx') return -1;
-	if (b.name === 'index.md' || b.name === 'index.mdx') return 1;
-	if (a.isDirectory() && !b.isDirectory()) return -1;
-	if (!a.isDirectory() && b.isDirectory()) return 1;
-	return a.name.localeCompare(b.name, 'zh-CN');
+function compareEntries(a, b) {
+	const aIndex = isIndexFile(a.name);
+	const bIndex = isIndexFile(b.name);
+	if (aIndex !== bIndex) return aIndex ? -1 : 1;
+
+	if (a.order !== null && b.order !== null && a.order !== b.order) return a.order - b.order;
+	if (a.order !== null && b.order === null) return -1;
+	if (a.order === null && b.order !== null) return 1;
+
+	if (a.isDir !== b.isDir) return a.isDir ? -1 : 1;
+	return a.sortLabel.localeCompare(b.sortLabel, 'zh-CN');
 }
 
 /**
@@ -70,23 +107,24 @@ function makeDirectoryItems(dir) {
 			if (entry.isDirectory()) return !entry.name.startsWith('.') && !ignoredDirs.has(entry.name);
 			return entry.isFile() && /\.mdx?$/.test(entry.name);
 		})
-		.sort(sortDirectoryEntries)
 		.map((entry) => {
 			const fullPath = path.join(dir, entry.name);
-
-			if (entry.isDirectory()) {
-				return {
-					label: entry.name,
-					collapsed: true,
-					items: makeDirectoryItems(fullPath),
-				};
-			}
+			const isDir = entry.isDirectory();
+			const meta = isDir ? parseDirMeta(fullPath) : parseDocMeta(fullPath);
+			const label = meta.label || meta.title;
 
 			return {
-				label: parseTitle(fullPath),
-				link: `/${slugFromFile(fullPath).toLowerCase()}/`,
+				name: entry.name,
+				isDir,
+				order: meta.order,
+				sortLabel: label,
+				item: isDir
+					? { label, collapsed: true, items: makeDirectoryItems(fullPath) }
+					: { label, link: `/${slugFromFile(fullPath).toLowerCase()}/` },
 			};
 		})
+		.sort(compareEntries)
+		.map((entry) => entry.item)
 		.filter((item) => {
 			if (!('items' in item)) return true;
 			return Array.isArray(item.items) && item.items.length > 0;
@@ -109,6 +147,9 @@ export default defineConfig({
 			title: 'USC Wiki',
 			description: '南华大学校园知识库',
 			disable404Route: true,
+			components: {
+				Search: './src/components/Search.astro',
+			},
 			customCss: ['katex/dist/katex.min.css', './src/styles/wiki-markdown.css'],
 			head: [
 				{ tag: 'script', attrs: { src: '/sidebar-scroll.js?v=3', defer: true } },

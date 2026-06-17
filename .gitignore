@@ -5,6 +5,7 @@ node_modules/
 dist/
 .astro/
 public/vault/
+public/pagefind/
 src/content/docs/
 docs/.vitepress/dist/
 docs/.vitepress/cache/
