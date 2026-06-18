@@ -142,9 +142,17 @@ const hideSidebarScrollbarCss = fs.readFileSync(
 	'utf-8'
 );
 
+const site =
+	process.env.SITE ??
+	(process.env.VERCEL_PROJECT_PRODUCTION_URL
+		? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+		: process.env.VERCEL_URL
+			? `https://${process.env.VERCEL_URL}`
+			: 'http://localhost:4321');
+
 // https://astro.build/config
 export default defineConfig({
-	site: 'http://localhost:4321',
+	site,
 	markdown: {
 		remarkPlugins: [remarkDirective, remarkResourceCards, remarkWikiMarkdown, remarkMath],
 		rehypePlugins: [rehypeKatex, rehypeResourceCards, rehypeWikiImageEmbeds, rehypeWikiLinks],
