@@ -142,6 +142,12 @@ export function resolveVaultAsset(target, sourceFile, vaultIndex) {
 
 	if (normalized.includes('/')) {
 		candidates.push(path.join(sourceDir, normalized), path.join(docsRoot, normalized));
+		const basename = path.basename(normalized);
+		for (const folder of ['attachments', 'attachment', 'assets', 'static']) {
+			candidates.push(path.join(sourceDir, folder, basename));
+		}
+		const basenameMatches = vaultIndex.get(basename);
+		if (basenameMatches) candidates.push(...basenameMatches);
 	} else {
 		candidates.push(path.join(sourceDir, normalized));
 		for (const folder of ['attachments', 'attachment', 'assets', 'static']) {

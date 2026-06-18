@@ -6,10 +6,12 @@ USC Wiki 是一个基于 [Astro](https://astro.build/) + [Starlight](https://sta
 
 ## 内容板块
 
-- **学业指南**（`docs/academics/`）：教务指南、学院导航、课程信息。
-- **校园生活**（`docs/life/`）：校园网、校历、常用软件和校内生活信息。
-- **资源分享**（`docs/resources/`）：竞赛、流程、教程、模板、课程资料与常用文件。
-- **在线工具**（`docs/tools/`）：GPA 计算器、倒计时、Markdown 编辑器等实用工具。
+- **新生入门**（`docs/新生入门/`）：校园网、校历与入学须知。
+- **学习指南**（`docs/学习指南/`）：教务指南、课程攻略、课程资料、学院与专业。
+- **校园生活**（`docs/校园生活/`）：生活指南与常用软件。
+- **事务办理**（`docs/事务办理/`）：报销、研学、驾照等流程。
+- **竞赛与资源**（`docs/竞赛与资源/`）：竞赛、软件模板、使用教程。
+- **在线工具**（`docs/在线工具/`）：GPA 计算器、倒计时、Markdown 编辑器。
 
 想参与贡献？请阅读 [CONTRIBUTING.md](./CONTRIBUTING.md)。
 
@@ -76,7 +78,7 @@ pnpm astro        # 运行 Astro CLI
 - **任务列表**：`- [ ]`、`- [x]`
 - **图片预览**：正文图片可点击放大查看
 
-语法示例可参考 `docs/resources/markdown-demo.md`。
+语法示例可参考 `docs/关于本站/markdown-demo.md`。
 
 ## 站内搜索
 
@@ -94,17 +96,18 @@ pnpm astro        # 运行 Astro CLI
 ├── CONTRIBUTING.md               # 文档贡献指南
 ├── docs/                         # 文档内容根目录
 │   ├── _templates/               # 文档模板（不参与站点构建）
-│   ├── academics/                # 学业指南
-│   │   ├── 教务指南/             # 选课、GPA、课程安排
-│   │   ├── colleges/             # 学院导航
-│   │   └── course/               # 课程信息
-│   ├── life/                     # 校园生活
-│   ├── resources/                # 资源分享
-│   │   ├── 竞赛/
-│   │   ├── 流程/
-│   │   ├── 教程/
-│   │   └── 课程资源/
-│   └── tools/                    # 在线工具页面
+│   ├── 新生入门/
+│   ├── 学习指南/
+│   │   ├── 教务指南/
+│   │   ├── 课程攻略/
+│   │   ├── 课程资料/
+│   │   └── 学院与专业/
+│   ├── 校园生活/
+│   ├── 事务办理/
+│   ├── 竞赛与资源/
+│   ├── 经验分享/
+│   ├── 在线工具/
+│   └── 关于本站/
 ├── public/
 │   ├── sidebar-scroll.js         # 侧边栏行为增强
 │   ├── wiki-image-lightbox.js    # 图片点击预览
@@ -127,7 +130,7 @@ pnpm astro        # 运行 Astro CLI
 - 侧边栏根据 `docs/` 目录自动生成；目录名优先读取该目录 `index.md` 的 `title` 作为中文显示名。
 - 可通过 frontmatter 的 `order` 控制同级条目排序（数字越小越靠前）。
 - `.obsidian/`、`.vitepress/`、`superpowers/`、`_templates/`、`public/`、`static/` 等目录不会进入文档集合。
-- 图片、PDF、Word 等附件可以放在文档旁边或 `attachments/` 等目录中，构建时会同步到 `/vault/...`。
+- 图片、PDF、Word 等附件放在文档旁边的 `attachments/` 目录；课程试卷等共享附件可放在 `docs/学习指南/attachments/`，构建时会同步到 `/vault/...`。
 - 贡献方式详见 [CONTRIBUTING.md](./CONTRIBUTING.md)。
 
 ## 开发说明

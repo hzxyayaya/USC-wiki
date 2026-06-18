@@ -7,38 +7,50 @@ const noteCount = docs.length;
 
 const sections = [
 	{
-		title: '学业指南',
-		description: '课程、选课、GPA、学院与实训相关笔记。',
-		href: '/academics/',
+		title: '新生入门',
+		description: '校园网、校历与入学须知。',
+		href: '/新生入门/',
 		accent: 'blue',
 	},
 	{
+		title: '学习指南',
+		description: '选课、GPA、课程攻略、资料与学院信息。',
+		href: '/学习指南/',
+		accent: 'cyan',
+	},
+	{
 		title: '校园生活',
-		description: '校园网、校历、常用软件与校内生活信息。',
-		href: '/life/',
+		description: '食堂快递、吃喝玩乐与常用软件。',
+		href: '/校园生活/',
 		accent: 'green',
 	},
 	{
-		title: '资源分享',
-		description: '竞赛、证书、模板、课程资料与常用文件。',
-		href: '/resources/',
+		title: '事务办理',
+		description: '报销、研学、驾照等办事流程。',
+		href: '/事务办理/',
 		accent: 'amber',
 	},
 	{
+		title: '竞赛与资源',
+		description: '竞赛、模板、教程与软件推荐。',
+		href: '/竞赛与资源/',
+		accent: 'orange',
+	},
+	{
 		title: '在线工具',
-		description: '面向学习规划和日常效率的小工具集合。',
-		href: '/tools/',
+		description: 'GPA 计算器、倒计时与 Markdown 编辑器。',
+		href: '/在线工具/',
 		accent: 'violet',
 	},
 ];
 
 const highlights = [
-	{ title: '选课指南', href: '/academics/选课指南/' },
-	{ title: 'GPA', href: '/academics/gpa/' },
-	{ title: '校园生活指南', href: '/life/campus/' },
-	{ title: '软件推荐', href: '/resources/software/' },
-	{ title: '模板下载', href: '/resources/templates/' },
-	{ title: '在线工具', href: '/tools/' },
+	{ title: '选课指南', href: '/学习指南/教务指南/选课指南/' },
+	{ title: 'GPA', href: '/学习指南/教务指南/gpa/' },
+	{ title: '校园生活指南', href: '/校园生活/生活指南/' },
+	{ title: '软件推荐', href: '/竞赛与资源/软件与模板/software/' },
+	{ title: '模板下载', href: '/竞赛与资源/软件与模板/templates/' },
+	{ title: '在线工具', href: '/在线工具/' },
 ];
 ---
 
@@ -54,11 +66,12 @@ const highlights = [
 		<div class="hero-copy">
 			<p class="eyebrow">USC Wiki</p>
 			<h1>南华大学校园知识库</h1>
-			<p class="lead">把课程攻略、资源分享、校园生活和实用工具整理成一个更像 Obsidian 的入口。</p>
+			<p class="lead">把课程攻略、校园生活、事务办理与实用资源整理成一个更易查找的入口。</p>
 			<div class="hero-actions">
-				<a class="primary-action" href="/academics/">进入学业指南</a>
-				<a class="secondary-action" href="/resources/">浏览资源</a>
+				<a class="primary-action" href="/新生入门/">新生入门</a>
+				<a class="secondary-action" href="/学习指南/">学习指南</a>
 			</div>
+			<p class="disclaimer">本站内容由学生社区贡献，仅供参考，不代表南华大学官方立场。</p>
 		</div>
 		<div class="hero-panel" aria-label="站点概览">
 			<span>当前收录</span>
@@ -121,6 +134,14 @@ const highlights = [
 		line-height: 1.7;
 	}
 
+	.disclaimer {
+		max-width: 620px;
+		margin: 1rem 0 0;
+		color: var(--sl-color-gray-3);
+		font-size: 0.9rem;
+		line-height: 1.6;
+	}
+
 	.hero-actions {
 		display: flex;
 		flex-wrap: wrap;
@@ -179,14 +200,14 @@ const highlights = [
 
 	.section-grid {
 		display: grid;
-		grid-template-columns: repeat(4, minmax(0, 1fr));
+		grid-template-columns: repeat(3, minmax(0, 1fr));
 		gap: 1rem;
 		margin-top: 1.5rem;
 	}
 
 	.section-card {
 		display: block;
-		min-height: 180px;
+		min-height: 140px;
 		border: 1px solid var(--sl-color-gray-5);
 		border-top: 4px solid var(--accent-line);
 		border-radius: 8px;
@@ -230,12 +251,20 @@ const highlights = [
 		--accent-line: #79a7ff;
 	}
 
+	.section-card.cyan {
+		--accent-line: #5ec8d8;
+	}
+
 	.section-card.green {
 		--accent-line: #7bd88f;
 	}
 
 	.section-card.amber {
 		--accent-line: #f3be62;
+	}
+
+	.section-card.orange {
+		--accent-line: #f0a060;
 	}
 
 	.section-card.violet {

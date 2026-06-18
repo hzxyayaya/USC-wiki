@@ -15,6 +15,7 @@ export const collections = {
 				'!_templates/**',
 				'!public/**',
 				'!static/**',
+				'!**/attachments/**',
 			],
 		}),
 		schema: docsSchema(),

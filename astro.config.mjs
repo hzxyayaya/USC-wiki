@@ -7,12 +7,14 @@ import rehypeKatex from 'rehype-katex';
 import remarkDirective from 'remark-directive';
 import remarkMath from 'remark-math';
 import galaxy from 'starlight-theme-galaxy';
+import { remarkResourceCards } from './src/remark/resource-cards.mjs';
 import { remarkWikiMarkdown } from './src/remark/wiki-markdown.mjs';
+import { rehypeResourceCards } from './src/rehype/resource-cards.mjs';
 import { rehypeWikiImageEmbeds } from './src/rehype/wiki-image-embeds.mjs';
 import { rehypeWikiLinks } from './src/rehype/wiki-links.mjs';
 
 const docsRoot = path.resolve('docs');
-const ignoredDirs = new Set(['.obsidian', '.vitepress', 'superpowers', 'public', 'static', '_templates']);
+const ignoredDirs = new Set(['.obsidian', '.vitepress', 'superpowers', 'public', 'static', '_templates', 'attachments']);
 
 /**
  * @typedef {{ label: string, link: string } | { label: string, collapsed: boolean, items: SidebarItem[] }} SidebarItem
@@ -139,8 +141,8 @@ function makeSidebar() {
 export default defineConfig({
 	site: 'http://localhost:4321',
 	markdown: {
-		remarkPlugins: [remarkDirective, remarkWikiMarkdown, remarkMath],
-		rehypePlugins: [rehypeKatex, rehypeWikiImageEmbeds, rehypeWikiLinks],
+		remarkPlugins: [remarkDirective, remarkResourceCards, remarkWikiMarkdown, remarkMath],
+		rehypePlugins: [rehypeKatex, rehypeResourceCards, rehypeWikiImageEmbeds, rehypeWikiLinks],
 	},
 	integrations: [
 		starlight({
