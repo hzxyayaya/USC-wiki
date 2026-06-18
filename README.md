@@ -107,7 +107,6 @@ pnpm astro        # 运行 Astro CLI
 │   ├── 经验分享/
 │   └── 关于本站/
 ├── public/
-│   ├── sidebar-scroll.js         # 侧边栏行为增强
 │   ├── wiki-image-lightbox.js    # 图片点击预览
 │   └── vault/                    # 由 sync:vault 生成的附件目录
 ├── scripts/

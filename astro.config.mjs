@@ -137,6 +137,11 @@ function makeSidebar() {
 	return makeDirectoryItems(docsRoot);
 }
 
+const hideSidebarScrollbarCss = fs.readFileSync(
+	path.resolve('src/styles/critical-sidebar.css'),
+	'utf-8'
+);
+
 // https://astro.build/config
 export default defineConfig({
 	site: 'http://localhost:4321',
@@ -154,7 +159,7 @@ export default defineConfig({
 			},
 			customCss: ['katex/dist/katex.min.css', './src/styles/wiki-markdown.css'],
 			head: [
-				{ tag: 'script', attrs: { src: '/sidebar-scroll.js?v=3', defer: true } },
+				{ tag: 'style', content: hideSidebarScrollbarCss },
 				{ tag: 'script', attrs: { src: '/wiki-image-lightbox.js?v=1', defer: true } },
 			],
 			plugins: [galaxy()],

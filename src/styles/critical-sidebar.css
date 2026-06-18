@@ -1,0 +1,19 @@
+/* Loaded inline in <head> to avoid scrollbar flash on first paint */
+#starlight__sidebar,
+.sidebar-pane,
+.sidebar-content,
+.right-sidebar,
+.right-sidebar-panel {
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+}
+
+#starlight__sidebar::-webkit-scrollbar,
+.sidebar-pane::-webkit-scrollbar,
+.sidebar-content::-webkit-scrollbar,
+.right-sidebar::-webkit-scrollbar,
+.right-sidebar-panel::-webkit-scrollbar {
+	display: none;
+	width: 0;
+	height: 0;
+}
