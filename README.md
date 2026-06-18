@@ -1,6 +1,6 @@
 # USC Wiki
 
-> 面向南华大学学生的校园知识库，整理学业、校园生活、资源分享与在线工具。
+> 面向南华大学学生的校园知识库，整理学业、校园生活与资源分享。
 
 USC Wiki 是一个基于 [Astro](https://astro.build/) + [Starlight](https://starlight.astro.build/) 构建的静态文档站点。项目内容以 Markdown 为主，同时加入了接近 Obsidian 的写作体验：Wiki 链接、附件链接、图片嵌入、Callout、任务列表、数学公式等都可以直接在文档中使用。
 
@@ -11,7 +11,6 @@ USC Wiki 是一个基于 [Astro](https://astro.build/) + [Starlight](https://sta
 - **校园生活**（`docs/校园生活/`）：生活指南与常用软件。
 - **事务办理**（`docs/事务办理/`）：报销、研学、驾照等流程。
 - **竞赛与资源**（`docs/竞赛与资源/`）：竞赛、软件模板、使用教程。
-- **在线工具**（`docs/在线工具/`）：GPA 计算器、倒计时、Markdown 编辑器。
 
 想参与贡献？请阅读 [CONTRIBUTING.md](./CONTRIBUTING.md)。
 
@@ -106,7 +105,6 @@ pnpm astro        # 运行 Astro CLI
 │   ├── 事务办理/
 │   ├── 竞赛与资源/
 │   ├── 经验分享/
-│   ├── 在线工具/
 │   └── 关于本站/
 ├── public/
 │   ├── sidebar-scroll.js         # 侧边栏行为增强
