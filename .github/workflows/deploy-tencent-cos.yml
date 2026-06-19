@@ -1,0 +1,50 @@
+name: Deploy to Tencent COS
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-tencent-cos
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Build and upload to COS
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build static site
+        run: pnpm build
+        env:
+          SITE: ${{ secrets.SITE_URL }}
+
+      - name: Setup coscmd
+        run: pip install coscmd
+
+      - name: Configure coscmd
+        run: |
+          coscmd config \
+            -a "${{ secrets.TENCENT_SECRET_ID }}" \
+            -s "${{ secrets.TENCENT_SECRET_KEY }}" \
+            -b "${{ secrets.TENCENT_COS_BUCKET }}" \
+            -r "${{ secrets.TENCENT_COS_REGION }}"
+
+      - name: Upload dist to COS
+        run: coscmd upload -r --sync dist/ /
