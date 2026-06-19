@@ -30,10 +30,16 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Set site URL
+        run: |
+          if [ -n "${{ secrets.SITE_URL }}" ]; then
+            echo "SITE=${{ secrets.SITE_URL }}" >> "$GITHUB_ENV"
+          else
+            echo "SITE=https://${{ secrets.TENCENT_COS_BUCKET }}.cos-website.${{ secrets.TENCENT_COS_REGION }}.myqcloud.com" >> "$GITHUB_ENV"
+          fi
+
       - name: Build static site
         run: pnpm build
-        env:
-          SITE: ${{ secrets.SITE_URL }}
 
       - name: Setup coscmd
         run: pip install coscmd

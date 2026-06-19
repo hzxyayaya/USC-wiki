@@ -142,8 +142,9 @@ const hideSidebarScrollbarCss = fs.readFileSync(
 	'utf-8'
 );
 
+const siteFromEnv = process.env.SITE?.trim();
 const site =
-	process.env.SITE ??
+	siteFromEnv ||
 	(process.env.VERCEL_PROJECT_PRODUCTION_URL
 		? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
 		: process.env.VERCEL_URL
