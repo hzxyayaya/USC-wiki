@@ -143,13 +143,18 @@ const hideSidebarScrollbarCss = fs.readFileSync(
 );
 
 const siteFromEnv = process.env.SITE?.trim();
+const netlifyUrl = process.env.URL?.trim();
 const site =
 	siteFromEnv ||
 	(process.env.VERCEL_PROJECT_PRODUCTION_URL
 		? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
 		: process.env.VERCEL_URL
 			? `https://${process.env.VERCEL_URL}`
-			: 'http://localhost:4321');
+			: netlifyUrl
+				? netlifyUrl.startsWith('http')
+					? netlifyUrl
+					: `https://${netlifyUrl}`
+				: 'http://localhost:4321');
 
 // https://astro.build/config
 export default defineConfig({
