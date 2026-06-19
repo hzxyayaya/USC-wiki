@@ -77,4 +77,4 @@ jobs:
             -r "$COS_REGION"
 
       - name: Upload dist to COS
-        run: coscmd upload -r --sync dist/ /
+        run: coscmd upload -r --sync --acl public-read dist/ /
