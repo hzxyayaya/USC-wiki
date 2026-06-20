@@ -4,8 +4,6 @@ description: 报销、研学、驾照等校内办事流程
 order: 4
 ---
 
-# 事务办理
-
 需要反复查阅的办事流程，参考 [SJTU Wiki 生活服务](https://sjtu-geek.github.io/SJTU-Wiki/) 类信息整理。
 
 ## 已收录流程

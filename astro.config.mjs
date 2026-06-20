@@ -168,6 +168,21 @@ export default defineConfig({
 			title: 'USC Wiki',
 			description: '南华大学校园知识库',
 			disable404Route: true,
+			editLink: {
+				baseUrl: 'https://github.com/hzxyayaya/USC-wiki/edit/main/',
+			},
+			social: [
+				{
+					icon: 'github',
+					label: 'GitHub',
+					href: 'https://github.com/hzxyayaya/USC-wiki',
+				},
+				{
+					icon: 'external',
+					label: '讨论区',
+					href: 'https://github.com/hzxyayaya/USC-wiki/discussions',
+				},
+			],
 			components: {
 				Search: './src/components/Search.astro',
 			},

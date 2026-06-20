@@ -4,8 +4,6 @@ description: 选课、GPA、课程攻略、资料与学院专业信息
 order: 2
 ---
 
-# 学习指南
-
 汇总与学业相关的信息，对应 [THU Wiki 学习相关](https://wiki.thusns.org/) 与 [BUPT 学习生活](https://guide.byrdocs.org/) 板块。
 
 ## 分类入口

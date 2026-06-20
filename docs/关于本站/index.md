@@ -4,13 +4,12 @@ description: 项目说明、贡献方式与编写规范
 order: 99
 ---
 
-# 关于本站
-
 USC Wiki 是南华大学学生维护的校园知识库，参考 [BUPT 生存指南](https://guide.byrdocs.org/)、[InSUEP 开发须知](https://insuep.emptydust.com/) 等项目的协作方式。
 
 ## 快速链接
 
 - [贡献指南](/关于本站/贡献指南/)
+- [加入社区](/关于本站/加入社区/)
 - [Markdown 语法示例](/关于本站/markdown-demo/)
 
 ## 免责声明
