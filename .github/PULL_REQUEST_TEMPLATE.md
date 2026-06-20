@@ -22,10 +22,17 @@ Closes #123
 
 ## 📖 预览检查
 
-在本地检查效果，如 VitePress 是否正常渲染：
+在本地检查 Astro / Starlight 是否正常渲染：
 
 ```bash
-bun run docs:dev
+pnpm install
+pnpm dev
+```
+
+提交前建议再执行一次构建：
+
+```bash
+pnpm build
 ```
 
 ✅ 检查清单（Review 前请确认）
@@ -33,3 +40,4 @@ bun run docs:dev
 - [ ] 确认文档内容准确
 - [ ] 确认格式统一（标题/段落/链接）
 - [ ] 包含示例或截图（如适用）
+- [ ] `pnpm build` 通过

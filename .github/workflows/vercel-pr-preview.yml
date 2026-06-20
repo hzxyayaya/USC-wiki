@@ -1,4 +1,4 @@
-name: 🚀 Vercel PR Preview Deployment
+name: Vercel PR Preview Deployment
 
 on:
   pull_request:
@@ -11,25 +11,28 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Use Node.js
-        uses: actions/setup-node@v6
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: 22
+          cache: pnpm
 
       - name: Install Dependencies
-        run: bun install
+        run: pnpm install --frozen-lockfile
 
       - name: Build Static Site
-        # 根据你的项目实际构建命令调整，比如 VitePress 通常是 docs:build
-        run: bun run docs:build
+        run: pnpm build
 
       - name: Deploy to Vercel and Comment Preview URL
         uses: BetaHuhn/deploy-to-vercel-action@v1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERCEL_TOKEN:  ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
           github-comment: true

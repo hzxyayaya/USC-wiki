@@ -7,17 +7,13 @@ dist/
 public/vault/
 public/pagefind/
 src/content/docs/
-docs/.vitepress/dist/
-docs/.vitepress/cache/
-
 # Environment files
 .env
 .env.local
 .env.*.local
 
 # IDE
-.vscode/*
-!.vscode/extensions.json
+.vscode/
 .idea/
 *.sublime-project
 *.sublime-workspace
@@ -38,6 +34,7 @@ Thumbs.db
 # Playwright
 .playwright-cli/
 .playwright-mcp/
+output/
 
 # codex
 .omx/
