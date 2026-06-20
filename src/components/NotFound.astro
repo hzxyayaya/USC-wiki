@@ -1,0 +1,133 @@
+<div class="wiki-not-found">
+	<p class="wiki-not-found-code" aria-hidden="true">404</p>
+	<h1 id="_top" data-page-title class="wiki-not-found-title">页面未找到</h1>
+	<p class="wiki-not-found-desc">抱歉，我们找不到您要访问的页面。</p>
+	<button type="button" class="wiki-not-found-back" data-wiki-not-found-back>回退</button>
+</div>
+
+<script>
+	for (const button of document.querySelectorAll('[data-wiki-not-found-back]')) {
+		button.addEventListener('click', () => {
+			if (window.history.length > 1) {
+				window.history.back();
+				return;
+			}
+			window.location.href = '/';
+		});
+	}
+</script>
+
+<style>
+	:global(html:has(.wiki-not-found) main > .content-panel:first-child:not(:has(.wiki-not-found))),
+	:global(html:has(.wiki-not-found) footer) {
+		display: none;
+	}
+
+	:global(html:has(.wiki-not-found) .main-frame),
+	:global(html:has(.wiki-not-found) .main-pane) {
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+		width: 100%;
+	}
+
+	:global(html:has(.wiki-not-found) .main-pane) {
+		justify-content: center;
+		min-height: calc(100svh - var(--sl-nav-height));
+	}
+
+	:global(html:has(.wiki-not-found) main) {
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+		justify-content: center;
+		min-height: 0;
+		padding-block: 0;
+	}
+
+	:global(html:has(.wiki-not-found) main > .content-panel:last-child) {
+		display: flex;
+		flex: 1;
+		align-items: center;
+		justify-content: center;
+	}
+
+	:global(html:has(.wiki-not-found) .sl-markdown-content) {
+		width: 100%;
+	}
+
+	.wiki-not-found {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 0.75rem;
+		width: min(100%, 36rem);
+		margin-inline: auto;
+		padding: 1.5rem 1rem;
+		text-align: center;
+	}
+
+	.wiki-not-found-code {
+		margin: 0;
+		font-size: clamp(4.5rem, 14vw, 6.5rem);
+		font-weight: 700;
+		line-height: 1;
+		letter-spacing: -0.04em;
+		background: linear-gradient(
+			135deg,
+			var(--sl-color-accent-high),
+			color-mix(in srgb, var(--sl-color-accent-high) 72%, var(--sl-color-accent))
+		);
+		-webkit-background-clip: text;
+		background-clip: text;
+		color: transparent;
+	}
+
+	.wiki-not-found-title {
+		margin: 0.25rem 0 0;
+		max-width: none;
+		font-size: clamp(1.75rem, 4vw, 2.25rem);
+		font-weight: 700;
+		line-height: 1.2;
+		color: var(--sl-color-white);
+	}
+
+	.wiki-not-found-desc {
+		margin: 0.5rem 0 1.25rem;
+		max-width: 28rem;
+		font-size: 1.0625rem;
+		line-height: 1.6;
+		color: var(--sl-color-gray-3);
+	}
+
+	.wiki-not-found-back {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 7.5rem;
+		padding: 0.625rem 1.75rem;
+		border: 0;
+		border-radius: 0.5rem;
+		background: var(--sl-color-accent-high);
+		color: var(--sl-color-black);
+		font: inherit;
+		font-size: 1rem;
+		font-weight: 600;
+		cursor: pointer;
+		transition: background-color 0.15s ease;
+	}
+
+	.wiki-not-found-back:hover {
+		background: color-mix(in srgb, var(--sl-color-accent-high) 88%, var(--sl-color-white));
+	}
+
+	.wiki-not-found-back:focus-visible {
+		outline: 2px solid var(--sl-color-accent-high);
+		outline-offset: 2px;
+	}
+
+	:global(:root[data-theme='light']) .wiki-not-found-title {
+		color: var(--sl-color-black);
+	}
+</style>

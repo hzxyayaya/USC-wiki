@@ -107,7 +107,7 @@ function makeDirectoryItems(dir) {
 		.readdirSync(dir, { withFileTypes: true })
 		.filter((entry) => {
 			if (entry.isDirectory()) return !entry.name.startsWith('.') && !ignoredDirs.has(entry.name);
-			return entry.isFile() && /\.mdx?$/.test(entry.name);
+			return entry.isFile() && /\.mdx?$/.test(entry.name) && entry.name !== '404.md' && entry.name !== '404.mdx';
 		})
 		.map((entry) => {
 			const fullPath = path.join(dir, entry.name);
@@ -167,7 +167,6 @@ export default defineConfig({
 		starlight({
 			title: 'USC Wiki',
 			description: '南华大学校园知识库',
-			disable404Route: true,
 			editLink: {
 				baseUrl: 'https://github.com/hzxyayaya/USC-wiki/edit/main/',
 			},
@@ -184,6 +183,7 @@ export default defineConfig({
 				},
 			],
 			components: {
+				Hero: './src/components/Hero.astro',
 				Search: './src/components/Search.astro',
 			},
 			customCss: ['katex/dist/katex.min.css', './src/styles/wiki-markdown.css'],
