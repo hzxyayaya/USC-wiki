@@ -1,4 +1,6 @@
-/* Loaded inline in <head> to avoid scrollbar flash on first paint */
+/* Loaded inline in <head> to avoid sidebar flash on first paint */
+
+/* Scrollbar */
 #starlight__sidebar,
 .sidebar-pane,
 .sidebar-content,
@@ -16,4 +18,13 @@
 	display: none;
 	width: 0;
 	height: 0;
+}
+
+/* Caret icons — must be inline; customCss loads after first paint */
+.sidebar-content summary .caret {
+	display: none !important;
+}
+
+.sidebar-content summary {
+	justify-content: flex-start;
 }

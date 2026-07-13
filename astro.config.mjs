@@ -213,6 +213,7 @@ export default defineConfig({
 				'katex/dist/katex.min.css',
 				'./src/styles/wiki-markdown.css',
 				'./src/styles/wiki-theme.css',
+				'./src/styles/wiki-sidebar.css',
 				'./src/styles/wiki-no-gradients.css',
 			],
 			head: [
