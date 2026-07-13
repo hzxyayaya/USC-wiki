@@ -2,6 +2,8 @@
 title: 新生入门
 description: 入学准备、校园网、校历与新生常见问题
 order: 1
+created: 2026-06-18
+updated: 2026-06-21
 ---
 
 面向刚入学的同学，整理入学前后最需要知道的信息。参考 [InSUEP 新生你好](https://insuep.emptydust.com/) 与 [南理工新生指南](https://manual.njust.wiki/) 的组织方式。

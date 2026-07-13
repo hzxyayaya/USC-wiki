@@ -2,6 +2,8 @@
 title: 事务办理
 description: 报销、研学、驾照等校内办事流程
 order: 4
+created: 2026-06-18
+updated: 2026-06-21
 ---
 
 需要反复查阅的办事流程，参考 [SJTU Wiki 生活服务](https://sjtu-geek.github.io/SJTU-Wiki/) 类信息整理。

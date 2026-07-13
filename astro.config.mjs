@@ -8,6 +8,7 @@ import remarkDirective from 'remark-directive';
 import remarkMath from 'remark-math';
 import galaxy from 'starlight-theme-galaxy';
 import { remarkResourceCards } from './src/remark/resource-cards.mjs';
+import { remarkDocMeta } from './src/remark/doc-meta.mjs';
 import { remarkWikiMarkdown } from './src/remark/wiki-markdown.mjs';
 import { rehypeResourceCards } from './src/rehype/resource-cards.mjs';
 import { rehypeWikiImageEmbeds } from './src/rehype/wiki-image-embeds.mjs';
@@ -21,8 +22,11 @@ const ignoredDirs = new Set(['.obsidian', '.vitepress', 'superpowers', 'public',
  */
 
 /**
- * @typedef {{ title: string, order: number | null, label: string | null }} DocMeta
+ * @typedef {{ title: string, order: number | null, label: string | null, draft: boolean }} DocMeta
  */
+
+const isProductionBuild =
+	process.env.NODE_ENV === 'production' || process.argv.includes('build');
 
 const isIndexFile = (name) => name === 'index.md' || name === 'index.mdx';
 
@@ -50,8 +54,10 @@ function parseDocMeta(filePath) {
 		sidebarBlock.match(/order\s*:\s*(-?\d+(?:\.\d+)?)/)?.[1];
 	const order = orderRaw === undefined ? null : Number(orderRaw);
 	const label = stripQuotes(sidebarBlock.match(/label\s*:\s*(.+)/)?.[1]) || null;
+	const draftRaw = frontmatter.match(/^draft\s*:\s*(true|false)\s*$/m)?.[1];
+	const draft = draftRaw === 'true';
 
-	return { title, order, label };
+	return { title, order, label, draft };
 }
 
 /**
@@ -64,7 +70,7 @@ function parseDirMeta(dir) {
 		const indexPath = path.join(dir, indexName);
 		if (fs.existsSync(indexPath)) return parseDocMeta(indexPath);
 	}
-	return { title: path.basename(dir), order: null, label: null };
+	return { title: path.basename(dir), order: null, label: null, draft: false };
 }
 
 /**
@@ -113,7 +119,11 @@ function makeDirectoryItems(dir) {
 			const fullPath = path.join(dir, entry.name);
 			const isDir = entry.isDirectory();
 			const meta = isDir ? parseDirMeta(fullPath) : parseDocMeta(fullPath);
+
+			if (!isDir && meta.draft && isProductionBuild) return null;
+
 			const label = meta.label || meta.title;
+			const displayLabel = meta.draft && !isProductionBuild ? `${label}（草稿）` : label;
 
 			return {
 				name: entry.name,
@@ -121,10 +131,11 @@ function makeDirectoryItems(dir) {
 				order: meta.order,
 				sortLabel: label,
 				item: isDir
-					? { label, collapsed: true, items: makeDirectoryItems(fullPath) }
-					: { label, link: `/${slugFromFile(fullPath).toLowerCase()}/` },
+					? { label: displayLabel, collapsed: true, items: makeDirectoryItems(fullPath) }
+					: { label: displayLabel, link: `/${slugFromFile(fullPath).toLowerCase()}/` },
 			};
 		})
+		.filter(Boolean)
 		.sort(compareEntries)
 		.map((entry) => entry.item)
 		.filter((item) => {
@@ -142,6 +153,9 @@ const hideSidebarScrollbarCss = fs.readFileSync(
 	'utf-8'
 );
 
+/** 正式站点地址；用于 sitemap、canonical、OG 等 SEO 元数据 */
+const DEFAULT_SITE = 'https://usc-wiki.netlify.app';
+
 const siteFromEnv = process.env.SITE?.trim();
 const netlifyUrl = process.env.URL?.trim();
 const site =
@@ -154,19 +168,28 @@ const site =
 				? netlifyUrl.startsWith('http')
 					? netlifyUrl
 					: `https://${netlifyUrl}`
-				: 'http://localhost:4321');
+				: process.env.NODE_ENV === 'production'
+					? DEFAULT_SITE
+					: 'http://localhost:4321');
 
 // https://astro.build/config
 export default defineConfig({
 	site,
 	markdown: {
-		remarkPlugins: [remarkDirective, remarkResourceCards, remarkWikiMarkdown, remarkMath],
+		remarkPlugins: [remarkDirective, remarkResourceCards, remarkWikiMarkdown, remarkDocMeta, remarkMath],
 		rehypePlugins: [rehypeKatex, rehypeResourceCards, rehypeWikiImageEmbeds, rehypeWikiLinks],
 	},
 	integrations: [
 		starlight({
 			title: 'USC Wiki',
 			description: '南华大学校园知识库',
+			defaultLocale: 'root',
+			locales: {
+				root: {
+					label: '简体中文',
+					lang: 'zh-CN',
+				},
+			},
 			editLink: {
 				baseUrl: 'https://github.com/hzxyayaya/USC-wiki/edit/main/',
 			},

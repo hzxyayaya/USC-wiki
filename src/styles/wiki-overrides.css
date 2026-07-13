@@ -30,6 +30,15 @@
 	margin-inline-start: 0 !important;
 }
 
+.sl-markdown-content .doc-meta {
+	margin-top: 2rem;
+	padding-top: 1rem;
+	border-top: 1px solid var(--sl-color-hairline);
+	font-size: var(--sl-text-xs);
+	color: var(--sl-color-gray-3);
+	text-align: end;
+}
+
 /* Obsidian-like title row: override Starlight block spacing and summary defaults */
 .sl-markdown-content .callout > .callout-title,
 .sl-markdown-content details.callout > summary.callout-title {

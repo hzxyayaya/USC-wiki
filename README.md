@@ -12,7 +12,7 @@ USC Wiki 是一个基于 [Astro](https://astro.build/) + [Starlight](https://sta
 - **事务办理**（`docs/事务办理/`）：报销、研学、驾照等流程。
 - **竞赛与资源**（`docs/竞赛与资源/`）：竞赛、软件模板、使用教程。
 
-想参与贡献？请阅读 [CONTRIBUTING.md](./CONTRIBUTING.md)。
+想参与贡献？请阅读 [贡献指南](https://usc-wiki.netlify.app/关于本站/贡献指南/)（源码：`docs/关于本站/贡献指南.md`）。
 
 ## 技术栈
 
@@ -92,7 +92,7 @@ pnpm astro        # 运行 Astro CLI
 ```text
 .
 ├── astro.config.mjs              # Astro/Starlight 配置与自动侧边栏生成
-├── CONTRIBUTING.md               # 文档贡献指南
+├── CONTRIBUTING.md               # 指向 Wiki 贡献指南的简短说明
 ├── docs/                         # 文档内容根目录
 │   ├── _templates/               # 文档模板（不参与站点构建）
 │   ├── 新生入门/
@@ -128,7 +128,7 @@ pnpm astro        # 运行 Astro CLI
 - 可通过 frontmatter 的 `order` 控制同级条目排序（数字越小越靠前）。
 - `.obsidian/`、`.vitepress/`、`superpowers/`、`_templates/`、`public/`、`static/` 等目录不会进入文档集合。
 - 图片、PDF、Word 等附件放在文档旁边的 `attachments/` 目录；课程试卷等共享附件可放在 `docs/学习指南/attachments/`，构建时会同步到 `/vault/...`。
-- 贡献方式详见 [CONTRIBUTING.md](./CONTRIBUTING.md)。
+- 贡献方式详见 [贡献指南](https://usc-wiki.netlify.app/关于本站/贡献指南/)。
 
 ## 开发说明
 

@@ -2,6 +2,8 @@
 title: 经验分享
 description: 保研、实习、工具推荐等学长学姐经验
 order: 6
+created: 2026-06-18
+updated: 2026-06-21
 ---
 
 面向高年级同学的长期经验沉淀，对应 [THU Wiki 经验分享](https://wiki.thusns.org/docs/经验分享/工具安利) 板块。

@@ -6,6 +6,7 @@
   "packageManager": "pnpm@10.12.1",
   "scripts": {
     "sync:vault": "node scripts/sync-vault-assets.mjs",
+    "sync:doc-meta": "node scripts/sync-doc-meta.mjs",
     "sync:pagefind": "node scripts/sync-pagefind.mjs",
     "search:build": "pnpm run build && pnpm run sync:pagefind",
     "ensure:search": "node scripts/ensure-search-index.mjs",
