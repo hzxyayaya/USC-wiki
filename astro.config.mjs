@@ -209,7 +209,12 @@ export default defineConfig({
 				Hero: './src/components/Hero.astro',
 				Search: './src/components/Search.astro',
 			},
-			customCss: ['katex/dist/katex.min.css', './src/styles/wiki-markdown.css'],
+			customCss: [
+				'katex/dist/katex.min.css',
+				'./src/styles/wiki-markdown.css',
+				'./src/styles/wiki-theme.css',
+				'./src/styles/wiki-no-gradients.css',
+			],
 			head: [
 				{ tag: 'style', content: hideSidebarScrollbarCss },
 				{ tag: 'script', attrs: { src: '/wiki-image-lightbox.js?v=1', defer: true } },

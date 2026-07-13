@@ -1,26 +1,3 @@
-/* Unordered list bullets: vertically center with first line of text */
-.sl-markdown-content
-	ul:not(:where(.contains-task-list, .sl-steps))
-	> li:not(.task-list-item)::before {
-	top: 0.72em !important;
-	transform: translateY(-50%) !important;
-	line-height: 1 !important;
-}
-
-.sl-markdown-content
-	ul ul:not(:where(.contains-task-list, .sl-steps))
-	> li:not(.task-list-item)::before {
-	top: 0.72em !important;
-	transform: translateY(-50%) !important;
-}
-
-.sl-markdown-content
-	ul ul ul:not(:where(.contains-task-list, .sl-steps))
-	> li:not(.task-list-item)::before {
-	top: 0.72em !important;
-	transform: translateY(-50%) !important;
-}
-
 /* Collapsible callouts: remove Starlight default details chrome, keep callout padding */
 .sl-markdown-content details.callout {
 	border-inline-start: 0 !important;

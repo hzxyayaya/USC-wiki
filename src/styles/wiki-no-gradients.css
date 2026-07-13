@@ -1,0 +1,144 @@
+/* Flatten Galaxy theme gradients — solid colors only.
+ * Kept: H2 underline (.sl-markdown-content h2::before) and TOC current item
+ * highlight (starlight-toc a[aria-current='true']::after) use Galaxy gradients. */
+
+:root,
+:root[data-theme='light'],
+:root[data-theme='dark'] {
+	--galaxy-card-glass-bg: var(--sl-color-gray-8);
+	--galaxy-card-glass-bg-light: var(--sl-color-gray-8);
+	--galaxy-title-gradient: var(--sl-color-accent-high);
+	--galaxy-accent-highlight: none;
+	--galaxy-accent-highlight-hover: none;
+	--galaxy-button-primary-gradient: var(--sl-color-accent);
+	--galaxy-button-primary-gradient-hover: var(--sl-color-accent-high);
+	--galaxy-button-secondary-gradient: var(--sl-color-gray-8);
+	--galaxy-button-secondary-gradient-hover: var(--sl-color-gray-7);
+	--galaxy-button-secondary-gradient-light: var(--sl-color-gray-8);
+	--galaxy-button-secondary-gradient-light-hover: var(--sl-color-gray-7);
+	--galaxy-tabs-bg: var(--sl-color-gray-8);
+	--galaxy-tabs-accent-line: var(--sl-color-hairline);
+	--blockquote-bg: var(--sl-color-gray-8);
+}
+
+:root[data-theme='light'] {
+	--blockquote-border-accent: color-mix(in srgb, var(--sl-color-accent) 45%, var(--sl-color-hairline));
+}
+
+.site-title,
+.sl-markdown-content h1,
+.card .title,
+.card-grid .card .title,
+.pagination-links a .link-title,
+.pagination-links a:hover .link-title,
+[data-page-title] {
+	background: none;
+	-webkit-background-clip: unset;
+	background-clip: unset;
+	-webkit-text-fill-color: unset;
+	color: var(--sl-color-accent-high);
+}
+
+.sl-markdown-content h1,
+[data-page-title] {
+	color: var(--sl-color-gray-1);
+}
+
+.sl-markdown-content blockquote {
+	background: var(--sl-color-gray-8);
+}
+
+.sl-markdown-content blockquote::before {
+	opacity: 0.22;
+}
+
+.sl-markdown-content blockquote cite::before {
+	color: color-mix(in srgb, var(--sl-color-accent) 50%, var(--sl-color-gray-4));
+}
+
+.sl-markdown-content table thead th {
+	background: var(--sl-color-gray-8);
+}
+
+.sl-markdown-content table thead th::after {
+	background: var(--sl-color-accent);
+}
+
+.sl-banner {
+	background: var(--sl-color-accent);
+}
+
+.pagination-links a,
+.pagination-links a:hover,
+:root[data-theme='light'] .pagination-links a,
+:root[data-theme='light'] .pagination-links a:hover {
+	background: var(--sl-color-gray-8);
+}
+
+.sl-badge.default,
+.sl-badge:not([class*='note']):not([class*='danger']):not([class*='success']):not([class*='tip']):not([class*='caution']) {
+	background: color-mix(in srgb, var(--sl-color-gray-7) 65%, transparent);
+}
+
+.sl-badge.success {
+	background: color-mix(in srgb, #22c55e 22%, var(--sl-color-bg));
+}
+
+.sl-badge.danger {
+	background: color-mix(in srgb, #ef4444 22%, var(--sl-color-bg));
+}
+
+.sl-badge.caution,
+.sl-badge.warning {
+	background: color-mix(in srgb, #f59e0b 22%, var(--sl-color-bg));
+}
+
+.sl-badge.tip,
+.sl-badge.note {
+	background: color-mix(in srgb, var(--sl-color-accent) 18%, var(--sl-color-bg));
+}
+
+[data-has-hero] .page {
+	background: var(--sl-color-bg);
+	background-attachment: scroll;
+}
+
+article.card,
+.card-grid .card {
+	background: var(--sl-color-gray-8);
+}
+
+.hero .actions .action[data-variant='primary'] {
+	background: var(--sl-color-accent);
+}
+
+.hero .actions .action[data-variant='primary']:hover {
+	background: var(--sl-color-accent-high);
+}
+
+.hero .actions .action[data-variant='secondary'] {
+	background: var(--sl-color-gray-8);
+}
+
+.starlight-aside {
+	background: var(--galaxy-aside-bg, var(--sl-color-gray-8));
+}
+
+.starlight-aside::before {
+	background: var(--galaxy-aside-accent, var(--sl-color-accent));
+	opacity: 0.35;
+}
+
+.starlight-aside__title::after {
+	background: var(--galaxy-aside-accent, var(--sl-color-accent));
+	opacity: 0.3;
+}
+
+.sl-tabs {
+	background: var(--sl-color-gray-8);
+}
+
+.callout,
+.sl-markdown-content .starlight-aside {
+	background-image: none;
+}
