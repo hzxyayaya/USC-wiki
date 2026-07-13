@@ -7,32 +7,42 @@ const noteCount = docs.length;
 
 const sections = [
 	{
+		chapter: '01',
+		kicker: '初来南华',
 		title: '新生入门',
-		description: '校园网、校历与入学须知。',
+		description: '入学准备、校园网络、校历与防骗提醒。',
 		href: '/新生入门/',
 		accent: 'blue',
 	},
 	{
+		chapter: '02',
+		kicker: '认真学习',
 		title: '学习指南',
-		description: '选课、GPA、课程攻略、资料与学院信息。',
+		description: '教务、专业、课程攻略与学习资料。',
 		href: '/学习指南/',
 		accent: 'cyan',
 	},
 	{
+		chapter: '03',
+		kicker: '好好生活',
 		title: '校园生活',
-		description: '食堂快递、吃喝玩乐与常用软件。',
+		description: '常用软件、校园设施与日常生活。',
 		href: '/校园生活/',
 		accent: 'green',
 	},
 	{
+		chapter: '04',
+		kicker: '办好事情',
 		title: '事务办理',
-		description: '报销、研学、驾照等办事流程。',
+		description: '报销、研学、证件与常用办事流程。',
 		href: '/事务办理/',
 		accent: 'amber',
 	},
 	{
+		chapter: '05',
+		kicker: '走得更远',
 		title: '竞赛与资源',
-		description: '竞赛、模板、教程与软件推荐。',
+		description: '竞赛、经验、教程与实用资源。',
 		href: '/竞赛与资源/',
 		accent: 'orange',
 	},
@@ -55,255 +65,362 @@ const highlights = [
 		editUrl: false,
 	}}
 >
-	<section class="home-hero">
-		<div class="hero-copy">
-			<p class="eyebrow">USC Wiki</p>
-			<h1>南华大学校园知识库</h1>
-			<p class="lead">把课程攻略、校园生活、事务办理与实用资源整理成一个更易查找的入口。</p>
-			<div class="hero-actions">
-				<a class="primary-action" href="/新生入门/">新生入门</a>
-				<a class="secondary-action" href="/学习指南/">学习指南</a>
-				<a class="secondary-action" href="/关于本站/加入社区/">加入社区</a>
+	<div class="home-shell">
+		<section class="cover" aria-labelledby="home-title">
+			<div class="folio" aria-hidden="true">
+				<strong>01</strong>
+				<span>THE STUDENT<br />FIELD GUIDE</span>
 			</div>
-			<p class="disclaimer">本站内容由学生社区贡献，仅供参考，不代表南华大学官方立场。</p>
-		</div>
-		<div class="hero-panel" aria-label="站点概览">
-			<span>当前收录</span>
-			<strong>{noteCount}</strong>
-			<span>篇笔记</span>
-		</div>
-	</section>
+			<div class="cover-copy">
+				<p class="eyebrow">USC WIKI / 南华手册 · 由学生共同维护</p>
+				<h1 id="home-title">在南华，找到<br />你需要的答案</h1>
+				<p>课程、办事、校园生活与竞赛资源，整理成一本可以反复翻阅的学生手册</p>
+			</div>
+		</section>
 
-	<section class="section-grid" aria-label="分类入口">
-		{sections.map((section) => (
-			<a class={`section-card ${section.accent}`} href={section.href}>
-				<h2>{section.title}</h2>
-				<p>{section.description}</p>
-			</a>
-		))}
-	</section>
-
-	<section class="quick-links" aria-label="常用入口">
-		<h2>常用入口</h2>
-		<div>
-			{highlights.map((item) => (
-				<a href={item.href}>{item.title}</a>
+		<nav class="chapter-index" aria-label="内容章节">
+			{sections.map((section) => (
+				<a class={`chapter ${section.accent}`} href={section.href}>
+					<span class="chapter-line" aria-hidden="true"></span>
+					<span class="chapter-number">CHAPTER {section.chapter}</span>
+					<strong>{section.kicker}</strong>
+					<span class="chapter-title">{section.title}</span>
+					<p>{section.description}</p>
+				</a>
 			))}
-		</div>
-	</section>
+		</nav>
+
+		<section class="utility-row" aria-label="站点概览与常用入口">
+			<p class="site-stat">当前收录 <strong>{noteCount}</strong> 篇校园笔记</p>
+			<nav class="quick-links" aria-label="常用入口">
+				{highlights.map((item) => (
+					<a href={item.href}>{item.title}</a>
+				))}
+			</nav>
+		</section>
+	</div>
 </StarlightPage>
 
 <style>
-	:global(h1#_top) {
+	:global(.content-panel:has(h1#_top)) {
 		display: none;
 	}
 
-	.home-hero {
+	:global(main footer) {
+		display: none;
+	}
+
+	.cover {
 		display: grid;
-		grid-template-columns: minmax(0, 1fr) 220px;
-		gap: 2rem;
+		grid-template-columns: 7rem minmax(0, 1fr);
+		gap: clamp(1.5rem, 3vw, 2.5rem);
 		align-items: end;
-		padding: clamp(1.75rem, 5vw, 4rem) 0 2.5rem;
+		padding-block: 3rem;
+		border-bottom: 1px solid var(--sl-color-hairline);
+		animation: intro-rise 520ms ease-out both;
+	}
+
+	.folio strong,
+	.folio span {
+		display: block;
+	}
+
+	.folio strong {
+		color: var(--sl-color-accent);
+		font-family: Georgia, 'Times New Roman', serif;
+		font-size: clamp(3.75rem, 7vw, 5.25rem);
+		font-weight: 400;
+		line-height: 0.82;
+		letter-spacing: -0.08em;
+	}
+
+	.folio span {
+		margin-top: 1.4rem;
+		color: var(--sl-color-gray-3);
+		font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+		font-size: 0.62rem;
+		font-weight: 700;
+		line-height: 1.55;
+		letter-spacing: 0.13em;
 	}
 
 	.eyebrow {
-		margin: 0 0 0.75rem;
+		margin: 0 0 0.85rem;
 		color: var(--sl-color-accent-high);
+		font-size: 0.72rem;
 		font-weight: 700;
+		letter-spacing: 0.12em;
 	}
 
-	.home-hero h1 {
-		max-width: 760px;
+	.cover h1,
+	.chapter strong {
+		font-family: 'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', SimSun, serif;
+	}
+
+	.cover h1 {
+		max-width: 42rem;
 		margin: 0;
-		font-size: clamp(2.25rem, 5.2vw, 4.6rem);
-		line-height: 1.05;
+		color: var(--sl-color-white);
+		font-size: clamp(2.6rem, 5.6vw, 4.8rem);
+		font-weight: 700;
+		line-height: 1.12;
+		letter-spacing: -0.055em;
 		text-wrap: balance;
 	}
 
-	.lead {
-		max-width: 620px;
-		margin: 1.25rem 0 0;
+	.cover-copy > p:last-child {
+		max-width: 36rem;
+		margin: 1.15rem 0 0;
 		color: var(--sl-color-gray-2);
-		font-size: 1.2rem;
-		line-height: 1.7;
+		font-size: clamp(1rem, 1.6vw, 1.1rem);
+		line-height: 1.75;
 	}
 
-	.disclaimer {
-		max-width: 620px;
-		margin: 1rem 0 0;
-		color: var(--sl-color-gray-3);
-		font-size: 0.9rem;
-		line-height: 1.6;
-	}
-
-	.hero-actions {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.75rem;
-		margin-top: 2rem;
-	}
-
-	.primary-action,
-	.secondary-action,
-	.quick-links a {
-		border-radius: 8px;
-		text-decoration: none;
-	}
-
-	.primary-action,
-	.secondary-action {
-		display: inline-flex;
-		align-items: center;
-		min-height: 2.75rem;
-		padding: 0.65rem 1rem;
-		font-weight: 700;
-	}
-
-	.primary-action {
-		background: var(--sl-color-accent-high);
-		color: var(--sl-color-black);
-	}
-
-	.secondary-action {
-		border: 1px solid var(--sl-color-gray-5);
-		color: var(--sl-color-white);
-	}
-
-	.hero-panel {
-		border: 1px solid var(--sl-color-gray-5);
-		border-radius: 8px;
-		padding: 1.25rem;
-		background: color-mix(in srgb, var(--sl-color-bg), var(--sl-color-accent-low) 10%);
-	}
-
-	.hero-panel span,
-	.hero-panel strong {
-		display: block;
-	}
-
-	.hero-panel span {
-		color: var(--sl-color-gray-2);
-	}
-
-	.hero-panel strong {
-		margin: 0.35rem 0;
-		color: var(--sl-color-white);
-		font-size: 3rem;
-		line-height: 1;
-	}
-
-	.section-grid {
+	.chapter-index {
 		display: grid;
-		grid-template-columns: repeat(3, minmax(0, 1fr));
-		gap: 1rem;
-		margin-top: 1.5rem;
+		grid-template-columns: repeat(5, minmax(0, 1fr));
+		border-bottom: 1px solid var(--sl-color-hairline);
+		animation: intro-rise 520ms 80ms ease-out both;
 	}
 
-	.section-card {
+	.chapter {
 		display: block;
-		min-height: 140px;
-		border: 1px solid var(--sl-color-gray-5);
-		border-top: 4px solid var(--accent-line);
-		border-radius: 8px;
-		padding: 1.1rem;
-		background:
-			linear-gradient(180deg, color-mix(in srgb, var(--accent-line), transparent 88%), transparent 55%),
-			color-mix(in srgb, var(--sl-color-bg), var(--sl-color-gray-6) 42%);
+		min-width: 0;
+		padding: 1.5rem;
+		border-inline-end: 1px solid var(--sl-color-hairline);
 		color: inherit;
 		text-decoration: none;
 		transition:
-			border-color 160ms ease,
+			background 160ms ease,
 			transform 160ms ease,
-			box-shadow 160ms ease;
+			color 160ms ease;
 	}
 
-	.section-card:hover {
-		border-color: var(--accent-line);
-		box-shadow: 0 10px 30px color-mix(in srgb, var(--accent-line), transparent 84%);
+	.chapter:last-child {
+		border-inline-end: 0;
+	}
+
+	.chapter:hover {
+		background: color-mix(in srgb, var(--chapter-accent), transparent 95%);
+		color: var(--sl-color-accent-high);
 		transform: translateY(-2px);
 	}
 
-	.section-card:focus-visible {
-		outline: 2px solid var(--accent-line);
-		outline-offset: 3px;
+	.chapter-line {
+		display: block;
+		width: 2rem;
+		height: 3px;
+		margin-bottom: 1.25rem;
+		background: var(--chapter-accent);
+		transition: width 180ms ease;
 	}
 
-	.section-card h2 {
-		margin: 0;
-		font-size: 1.15rem;
-		text-decoration: none;
+	.chapter:hover .chapter-line {
+		width: 3.25rem;
 	}
 
-	.section-card p {
-		margin: 0.75rem 0 0;
-		color: var(--sl-color-gray-2);
+	.chapter-number {
+		display: block;
+		color: var(--sl-color-gray-3);
+		font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+		font-size: 0.62rem;
+		font-weight: 700;
+		letter-spacing: 0.08em;
+	}
+
+	.chapter strong {
+		display: block;
+		margin-top: 0.75rem;
+		color: var(--sl-color-white);
+		font-size: 1.2rem;
+		line-height: 1.25;
+	}
+
+	.chapter-title {
+		display: block;
+		margin-top: 0.35rem;
+		color: var(--chapter-accent);
+		font-size: 0.76rem;
+		font-weight: 700;
+	}
+
+	.chapter p {
+		margin: 1rem 0 0;
+		color: var(--sl-color-gray-3);
+		font-size: 0.82rem;
 		line-height: 1.65;
-		text-decoration: none;
 	}
 
-	.section-card.blue {
-		--accent-line: #79a7ff;
+	.chapter.blue {
+		--chapter-accent: #79a7ff;
 	}
 
-	.section-card.cyan {
-		--accent-line: #5ec8d8;
+	.chapter.cyan {
+		--chapter-accent: #5ec8d8;
 	}
 
-	.section-card.green {
-		--accent-line: #7bd88f;
+	.chapter.green {
+		--chapter-accent: #7bd88f;
 	}
 
-	.section-card.amber {
-		--accent-line: #f3be62;
+	.chapter.amber {
+		--chapter-accent: #f3be62;
 	}
 
-	.section-card.orange {
-		--accent-line: #f0a060;
+	.chapter.orange {
+		--chapter-accent: #f0a060;
 	}
 
-	.section-card.violet {
-		--accent-line: #b6a0ff;
+	.utility-row {
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr);
+		gap: 2rem;
+		align-items: center;
+		padding-block: 1.5rem;
+		animation: intro-rise 520ms 140ms ease-out both;
+	}
+
+	.site-stat {
+		margin: 0;
+		color: var(--sl-color-gray-3);
+		font-size: 0.82rem;
+		white-space: nowrap;
+	}
+
+	.site-stat strong {
+		color: var(--sl-color-accent-high);
+		font-size: 1.05rem;
 	}
 
 	.quick-links {
-		margin-top: 2.5rem;
-		padding-bottom: 3rem;
-	}
-
-	.quick-links h2 {
-		margin: 0 0 1rem;
-		font-size: 1.25rem;
-	}
-
-	.quick-links div {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 0.75rem;
+		justify-content: flex-end;
+		gap: 0;
 	}
 
 	.quick-links a {
-		border: 1px solid var(--sl-color-gray-5);
-		padding: 0.55rem 0.8rem;
-		color: var(--sl-color-white);
-		background: color-mix(in srgb, var(--sl-color-bg), var(--sl-color-gray-6) 45%);
-		transition:
-			border-color 160ms ease,
-			background 160ms ease;
+		color: var(--sl-color-gray-2);
+		font-size: 0.78rem;
+		font-weight: 600;
+		text-decoration: none;
+		transition: color 160ms ease;
+	}
+
+	.quick-links a:not(:last-child)::after {
+		content: '/';
+		margin: 0 0.65rem;
+		color: var(--sl-color-gray-5);
 	}
 
 	.quick-links a:hover {
-		border-color: var(--sl-color-accent-high);
-		background: color-mix(in srgb, var(--sl-color-bg), var(--sl-color-accent-low) 12%);
+		color: var(--sl-color-accent-high);
 	}
 
-	@media (max-width: 900px) {
-		.home-hero,
-		.section-grid {
+	.chapter:focus-visible,
+	.quick-links a:focus-visible {
+		outline: 2px solid var(--sl-color-accent);
+		outline-offset: 4px;
+	}
+
+	@keyframes intro-rise {
+		from {
+			opacity: 0;
+			transform: translateY(10px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	@media (max-width: 64rem) {
+		.cover {
+			grid-template-columns: 6rem minmax(0, 1fr);
+		}
+
+		.chapter-index {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		.chapter {
+			border-bottom: 1px solid var(--sl-color-hairline);
+		}
+
+		.chapter:nth-child(even) {
+			border-inline-end: 0;
+		}
+
+		.chapter:last-child {
+			grid-column: 1 / -1;
+			border-bottom: 0;
+		}
+
+		.utility-row {
+			grid-template-columns: 1fr;
+			gap: 0.9rem;
+		}
+
+		.quick-links {
+			justify-content: flex-start;
+		}
+	}
+
+	@media (max-width: 40rem) {
+		.cover {
+			grid-template-columns: 1fr;
+			padding-block: 1.5rem 2rem;
+		}
+
+		.folio {
+			display: flex;
+			align-items: baseline;
+			gap: 1rem;
+		}
+
+		.folio strong {
+			font-size: 3.35rem;
+		}
+
+		.folio span {
+			margin-top: 0;
+		}
+
+		.cover h1 {
+			font-size: clamp(2.25rem, 11vw, 2.9rem);
+		}
+
+		.chapter-index {
 			grid-template-columns: 1fr;
 		}
 
-		.hero-panel {
-			max-width: 260px;
+		.chapter,
+		.chapter:nth-child(even) {
+			border-inline-end: 0;
+			border-bottom: 1px solid var(--sl-color-hairline);
+		}
+
+		.chapter:last-child {
+			grid-column: auto;
+			border-bottom: 0;
+		}
+
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.cover,
+		.chapter-index,
+		.utility-row {
+			animation: none;
+		}
+
+		.chapter,
+		.chapter-line {
+			transition: none;
+		}
+
+		.chapter:hover {
+			transform: none;
 		}
 	}
 </style>
