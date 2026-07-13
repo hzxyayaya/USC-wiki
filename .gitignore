@@ -27,6 +27,7 @@ Thumbs.db
 *.tmp
 *.temp
 .cache/
+output-check.html
 
 # Obsidian
 .obsidian/
