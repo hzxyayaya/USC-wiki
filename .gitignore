@@ -2,11 +2,19 @@
 node_modules/
 
 # Build output
+# Astro
 dist/
 .astro/
 public/vault/
 public/pagefind/
 src/content/docs/
+
+# Next.js
+.next/
+out/
+build/
+*.tsbuildinfo
+.vercel
 # Environment files
 .env
 .env.local
