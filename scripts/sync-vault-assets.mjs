@@ -52,6 +52,8 @@ await fs.rm(outputRoot, { recursive: true, force: true })
 
 const assets = await walk(docsRoot)
 
-await Promise.all(assets.map(copyAsset))
+for (const asset of assets) {
+  await copyAsset(asset)
+}
 
 console.log(`Synced ${assets.length} vault assets to ${path.relative(process.cwd(), outputRoot)}`)

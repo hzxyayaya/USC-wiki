@@ -68,31 +68,39 @@ function htmlNode(value) {
 	return { type: 'html', value };
 }
 
-function imageHtml(url, alt, size = {}) {
-	const attrs = [
-		'class="wiki-embed-image"',
-		`src="${escapeHtml(url)}"`,
-		`alt="${escapeHtml(alt)}"`,
-		'loading="lazy"',
-		'decoding="async"',
-	];
-	if (size.width) attrs.push(`width="${escapeHtml(size.width)}"`);
-	if (size.height) attrs.push(`height="${escapeHtml(size.height)}"`);
-	return htmlNode(`<img ${attrs.join(' ')} />`);
+/**
+ * 使用 mdast image，而不是 raw html。
+ * Fumadocs/MDX 默认不开启 allowDangerousHtml，html 节点会被丢掉。
+ */
+function imageNode(url, alt, size = {}) {
+	return {
+		type: 'image',
+		url,
+		alt,
+		data: {
+			hProperties: {
+				className: ['wiki-embed-image'],
+				loading: 'lazy',
+				decoding: 'async',
+				...(size.width ? { width: size.width } : {}),
+				...(size.height ? { height: size.height } : {}),
+			},
+		},
+	};
 }
 
 function missingEmbedNode(label) {
-	return htmlNode(
-		`<div class="wiki-embed-missing not-content" role="note">无法加载嵌入图像：${escapeHtml(label)}</div>`
-	);
-}
-
-function escapeHtml(value) {
-	return value
-		.replace(/&/g, '&amp;')
-		.replace(/</g, '&lt;')
-		.replace(/>/g, '&gt;')
-		.replace(/"/g, '&quot;');
+	return {
+		type: 'emphasis',
+		data: {
+			hName: 'span',
+			hProperties: {
+				className: ['wiki-embed-missing', 'not-content'],
+				role: 'note',
+			},
+		},
+		children: [{ type: 'text', value: `无法加载嵌入图像：${label}` }],
+	};
 }
 
 function pathBasename(value) {
@@ -107,7 +115,7 @@ function buildImageEmbed(rawEmbed, sourceFile, assetIndex) {
 	const resolved = resolveVaultAsset(target, sourceFile, assetIndex);
 	if (!resolved) return missingEmbedNode(target);
 
-	return imageHtml(toVaultUrl(resolved), pathBasename(target), parseImageSize(size));
+	return imageNode(toVaultUrl(resolved), pathBasename(target), parseImageSize(size));
 }
 
 function transformWikiSyntax(node, index, parent, sourceFile, context) {
@@ -235,11 +243,17 @@ function transformObsidianCallout(node, index, parent) {
 	};
 }
 
+function resolveSourceFile(file, fallback) {
+	const raw = file?.path || file?.history?.[0];
+	if (!raw) return fallback;
+	return path.isAbsolute(raw) ? raw : path.resolve(raw);
+}
+
 export function remarkWikiMarkdown() {
 	const wikiContext = createWikiLinkContext();
 
 	return function transformer(tree, file) {
-		const sourceFile = file?.path || file?.history?.[0] || wikiContext.docsRoot;
+		const sourceFile = resolveSourceFile(file, wikiContext.docsRoot);
 
 		visit(tree, 'text', (node, index, parent) => {
 			transformWikiSyntax(node, index, parent, sourceFile, wikiContext);

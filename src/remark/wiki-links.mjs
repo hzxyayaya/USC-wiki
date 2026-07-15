@@ -113,7 +113,11 @@ export function replaceWikiSyntaxInParent(node, index, parent, sourceFile, conte
 	const nodes = splitWikiLinks(node.value, sourceFile, context, options);
 	if (!nodes) return false;
 
-	if (parent.type === 'paragraph' && nodes.length === 1 && (nodes[0].type === 'html' || nodes[0].type === 'link')) {
+	if (
+		parent.type === 'paragraph' &&
+		nodes.length === 1 &&
+		(nodes[0].type === 'html' || nodes[0].type === 'link' || nodes[0].type === 'image')
+	) {
 		parent.children.splice(index, 1, nodes[0]);
 		return true;
 	}

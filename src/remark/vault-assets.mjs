@@ -1,8 +1,22 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import GithubSlugger from 'github-slugger';
 
 const docsRoot = path.resolve('docs');
-const ignoredDirs = new Set(['.obsidian', '.vitepress', 'superpowers', 'public', 'static', '_templates']);
+/** 扫描 markdown 时跳过资源目录 */
+const ignoredDocDirs = new Set([
+	'.obsidian',
+	'.vitepress',
+	'superpowers',
+	'public',
+	'static',
+	'attachments',
+	'attachment',
+	'assets',
+	'_templates',
+]);
+/** 扫描 vault 附件时仍进入 static / attachments */
+const ignoredAssetDirs = new Set(['.obsidian', '.vitepress', 'superpowers', 'public', '_templates']);
 const markdownExtensions = new Set(['.md', '.mdx']);
 export const vaultFileExtensions = new Set([
 	'.png',
@@ -29,9 +43,19 @@ function toPosix(value) {
 	return value.split(path.sep).join('/');
 }
 
+/**
+ * 生成 vault 资源 URL。
+ * 磁盘上的 public/vault 使用 Unicode 目录名；这里保留中文路径，
+ * 只编码空格等会破坏 URL 的字符。浏览器请求时会自行百分号编码，
+ * Netlify / nginx 等会解码回 Unicode 路径。
+ */
+function encodeVaultSegment(segment) {
+	return segment.replace(/[?#\[\]%]/g, (ch) => encodeURIComponent(ch)).replace(/ /g, '%20');
+}
+
 export function toVaultUrl(absPath) {
 	const relative = toPosix(path.relative(docsRoot, absPath));
-	return `/vault/${relative.split('/').map(encodeURIComponent).join('/')}`;
+	return `/vault/${relative.split('/').map(encodeVaultSegment).join('/')}`;
 }
 
 function scoreCandidate(candidate, sourceFile) {
@@ -46,7 +70,7 @@ function pickClosest(candidates, sourceFile) {
 	return [...candidates].sort((a, b) => scoreCandidate(a, sourceFile) - scoreCandidate(b, sourceFile))[0];
 }
 
-function walkFiles(dir, extensions, results = []) {
+function walkFiles(dir, extensions, ignoredDirs = ignoredDocDirs, results = []) {
 	if (!fs.existsSync(dir)) return results;
 
 	for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -54,7 +78,7 @@ function walkFiles(dir, extensions, results = []) {
 
 		if (entry.isDirectory()) {
 			if (entry.name.startsWith('.') || ignoredDirs.has(entry.name)) continue;
-			walkFiles(fullPath, extensions, results);
+			walkFiles(fullPath, extensions, ignoredDirs, results);
 			continue;
 		}
 
@@ -68,7 +92,7 @@ function walkFiles(dir, extensions, results = []) {
 export function createVaultIndex() {
 	const byBasename = new Map();
 
-	for (const filePath of walkFiles(docsRoot, vaultFileExtensions)) {
+	for (const filePath of walkFiles(docsRoot, vaultFileExtensions, ignoredAssetDirs)) {
 		const basename = path.basename(filePath);
 		const list = byBasename.get(basename) || [];
 		list.push(filePath);
@@ -96,10 +120,10 @@ function parseTitle(filePath) {
 }
 
 function slugFromFile(filePath) {
+	// 保留原始大小写，与 Fumadocs / 静态导出路径一致（如 cs/SWE）
 	return toPosix(path.relative(docsRoot, filePath))
 		.replace(/\.mdx?$/, '')
-		.replace(/\/index$/, '')
-		.toLowerCase();
+		.replace(/\/index$/, '');
 }
 
 function addIndexEntry(index, key, entry) {
@@ -123,6 +147,7 @@ export function createDocIndex() {
 		const basename = path.basename(filePath, path.extname(filePath));
 
 		addIndexEntry(index, slug, entry);
+		addIndexEntry(index, slug.toLowerCase(), entry);
 		addIndexEntry(index, slug.replace(/\//g, ' / '), entry);
 		addIndexEntry(index, basename, entry);
 		addIndexEntry(index, basename.toLowerCase(), entry);
@@ -210,14 +235,12 @@ function resolveDocTarget(target, sourceFile, docIndex) {
 	return null;
 }
 
+/**
+ * 与 Fumadocs remark-heading（github-slugger）对齐，避免 #锚点对不上。
+ */
 export function slugifyHeading(value) {
-	return value
-		.trim()
-		.toLowerCase()
-		.replace(/\s+/g, '-')
-		.replace(/[^\p{L}\p{N}-]+/gu, '')
-		.replace(/-+/g, '-')
-		.replace(/^-|-$/g, '');
+	const slugger = new GithubSlugger();
+	return slugger.slug(value.trim());
 }
 
 export function parseWikiLink(raw) {

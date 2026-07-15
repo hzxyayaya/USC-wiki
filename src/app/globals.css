@@ -1,0 +1,48 @@
+@import 'tailwindcss';
+@import 'fumadocs-ui/css/neutral.css';
+@import 'fumadocs-ui/css/preset.css';
+
+/* 保留 Obsidian / wiki 语义样式 */
+@import '../styles/wiki-callouts.css';
+@import '../styles/wiki-task-lists.css';
+@import '../styles/wiki-lists.css';
+@import '../styles/wiki-inline.css';
+@import '../styles/wiki-resource-cards.css';
+@import '../styles/wiki-image-lightbox.css';
+
+:root {
+	--wiki-accent: var(--color-fd-primary);
+	--font-sans: 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+	--font-serif: 'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', SimSun, serif;
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+	font-family: var(--font-sans);
+}
+
+.cover h1,
+.chapter strong {
+	font-family: var(--font-serif), serif;
+}
+
+/*
+ * Fumadocs 默认用 xl:layout:[--fd-toc-width:268px] 把右侧目录栏撑开。
+ * 若该工具类未生效，目录会挤在正文上方、右侧留白。这里兜底强制右侧 TOC。
+ */
+@media (min-width: 1280px) {
+	#nd-docs-layout {
+		--fd-toc-width: 268px;
+	}
+
+	#nd-toc {
+		display: flex;
+	}
+
+	[data-toc-popover] {
+		display: none;
+	}
+}
+
