@@ -1,7 +1,6 @@
 {
 	"$schema": "https://openapi.vercel.sh/vercel.json",
-	"framework": "astro",
+	"framework": "nextjs",
 	"installCommand": "pnpm install",
-	"buildCommand": "pnpm build",
-	"outputDirectory": "dist"
+	"buildCommand": "pnpm build"
 }

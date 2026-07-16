@@ -70,7 +70,7 @@ export function wikiLinkMdast(link) {
 				className: [
 					'wiki-link',
 					...(link.kind === 'attachment' ? ['wiki-link-attachment'] : []),
-				],
+				].join(' '),
 				...(link.kind === 'attachment' ? { target: '_blank', rel: ['noopener', 'noreferrer'] } : {}),
 			},
 		},

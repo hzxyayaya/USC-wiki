@@ -29,20 +29,21 @@ body {
 }
 
 /*
- * Fumadocs 默认用 xl:layout:[--fd-toc-width:268px] 把右侧目录栏撑开。
- * 若该工具类未生效，目录会挤在正文上方、右侧留白。这里兜底强制右侧 TOC。
+ * 目录暂用顶部横向弹出（popover），关闭右侧栏。
+ * 后续若改回右侧 TOC，删掉这段并打开 page 里的 tableOfContent 即可。
  */
-@media (min-width: 1280px) {
-	#nd-docs-layout {
-		--fd-toc-width: 268px;
-	}
-
-	#nd-toc {
-		display: flex;
-	}
-
-	[data-toc-popover] {
-		display: none;
-	}
+#nd-docs-layout {
+	--fd-toc-width: 0px;
+	--fd-toc-popover-height: 2.5rem;
 }
+
+#nd-toc,
+#nd-toc-placeholder {
+	display: none !important;
+}
+
+[data-toc-popover] {
+	display: block !important;
+}
+
 

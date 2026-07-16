@@ -1,5 +1,4 @@
 import rehypeKatex from 'rehype-katex';
-import remarkDirective from 'remark-directive';
 import remarkMath from 'remark-math';
 import rehypeRaw from 'rehype-raw';
 import rehypeStringify from 'rehype-stringify';
@@ -16,7 +15,6 @@ import { rehypeWikiLinks } from '../../rehype/wiki-links.mjs';
 export async function renderMarkdown(content: string, filePath: string) {
 	const file = await unified()
 		.use(remarkParse)
-		.use(remarkDirective)
 		.use(remarkResourceCards)
 		.use(remarkWikiMarkdown)
 		.use(remarkDocMeta)

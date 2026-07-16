@@ -1,9 +1,0 @@
-[build]
-  command = "pnpm build"
-  publish = "dist"
-
-[build.environment]
-  NODE_VERSION = "22"
-  SITE = "https://usc-wiki.netlify.app"
-
-# Astro 静态站点：各路径已有对应 index.html，无需 SPA fallback

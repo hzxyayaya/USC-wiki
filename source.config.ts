@@ -4,7 +4,6 @@ import {
 	frontmatterSchema,
 } from 'fumadocs-mdx/config';
 import { z } from 'zod';
-import remarkDirective from 'remark-directive';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import { remarkResourceCards } from './src/remark/resource-cards.mjs';
@@ -52,7 +51,7 @@ export default defineConfig({
 	mdxOptions: {
 		// 用函数形式合并，避免覆盖 Fumadocs 默认插件
 		remarkPlugins: (plugins) => [
-			remarkDirective,
+			// 不要用 remark-directive：会把 9:00 / 16:00 里的 :00 解析成指令，编成非法 <div>
 			remarkResourceCards,
 			remarkWikiMarkdown,
 			remarkDocMeta,

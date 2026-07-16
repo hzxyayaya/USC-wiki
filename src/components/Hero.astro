@@ -1,8 +1,0 @@
----
-import DefaultHero from '@astrojs/starlight/components/Hero.astro';
-import NotFound from './NotFound.astro';
-
-const { entry } = Astro.locals.starlightRoute;
----
-
-{entry.id === '404' ? <NotFound /> : <DefaultHero />}

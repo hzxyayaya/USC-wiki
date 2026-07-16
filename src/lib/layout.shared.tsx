@@ -6,6 +6,7 @@ export function baseOptions(): BaseLayoutProps {
 			title: 'USC Wiki',
 			url: '/',
 		},
+		githubUrl: 'https://github.com/hzxyayaya/USC-wiki',
 		links: [
 			{
 				text: '首页',

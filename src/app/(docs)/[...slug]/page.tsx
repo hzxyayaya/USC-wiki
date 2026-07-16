@@ -36,11 +36,10 @@ export default async function DocPage({ params }: PageProps) {
 			toc={page.data.toc}
 			full={page.data.full}
 			tableOfContent={{
-				enabled: true,
-				style: 'clerk',
+				// 暂用顶部横向弹出目录，右侧栏先关掉
+				enabled: false,
 			}}
 			tableOfContentPopover={{
-				// 窄屏仍用顶部弹出目录；宽屏走右侧栏
 				enabled: true,
 			}}
 		>
