@@ -1,46 +1,26 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import GithubSlugger from 'github-slugger';
+import {
+	docsRoot,
+	ignoredAssetDirs,
+	markdownExtensions,
+	parseDocMeta,
+	slugFromFile,
+	toPosix,
+	vaultFileExtensions,
+	walkFiles,
+} from '../lib/docs-shared.mjs';
 
-const docsRoot = path.resolve('docs');
-/** 扫描 markdown 时跳过资源目录 */
-const ignoredDocDirs = new Set([
-	'.obsidian',
-	'.vitepress',
-	'superpowers',
-	'public',
-	'static',
-	'attachments',
-	'attachment',
-	'assets',
-	'_templates',
-]);
-/** 扫描 vault 附件时仍进入 static / attachments */
-const ignoredAssetDirs = new Set(['.obsidian', '.vitepress', 'superpowers', 'public', '_templates']);
-const markdownExtensions = new Set(['.md', '.mdx']);
-export const vaultFileExtensions = new Set([
-	'.png',
-	'.jpg',
-	'.jpeg',
-	'.gif',
-	'.webp',
-	'.svg',
-	'.pdf',
-	'.doc',
-	'.docx',
-]);
+export { vaultFileExtensions } from '../lib/docs-shared.mjs';
+
 const imagePattern = /\.(png|jpe?g|gif|webp|svg)$/i;
-
 export function isImageTarget(target) {
 	return imagePattern.test(target.trim());
 }
 
 export function isVaultFileTarget(target) {
 	return vaultFileExtensions.has(path.extname(target.trim().toLowerCase()));
-}
-
-function toPosix(value) {
-	return value.split(path.sep).join('/');
 }
 
 /**
@@ -70,25 +50,6 @@ function pickClosest(candidates, sourceFile) {
 	return [...candidates].sort((a, b) => scoreCandidate(a, sourceFile) - scoreCandidate(b, sourceFile))[0];
 }
 
-function walkFiles(dir, extensions, ignoredDirs = ignoredDocDirs, results = []) {
-	if (!fs.existsSync(dir)) return results;
-
-	for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-		const fullPath = path.join(dir, entry.name);
-
-		if (entry.isDirectory()) {
-			if (entry.name.startsWith('.') || ignoredDirs.has(entry.name)) continue;
-			walkFiles(fullPath, extensions, ignoredDirs, results);
-			continue;
-		}
-
-		const extension = path.extname(entry.name).toLowerCase();
-		if (extensions.has(extension)) results.push(fullPath);
-	}
-
-	return results;
-}
-
 export function createVaultIndex() {
 	const byBasename = new Map();
 
@@ -107,25 +68,6 @@ export function createAssetIndex() {
 	return createVaultIndex();
 }
 
-function parseTitle(filePath) {
-	const content = fs.readFileSync(filePath, 'utf-8');
-	const frontmatter = content.match(/^---\r?\n([\s\S]*?)\r?\n---/)?.[1];
-	const title = frontmatter?.match(/^title\s*:\s*(.+)$/m)?.[1];
-
-	return (
-		title?.trim().replace(/^['"]|['"]$/g, '') ||
-		content.match(/^#\s+(.+)$/m)?.[1]?.trim() ||
-		path.basename(filePath, path.extname(filePath))
-	);
-}
-
-function slugFromFile(filePath) {
-	// 保留原始大小写，与 Fumadocs / 静态导出路径一致（如 cs/SWE）
-	return toPosix(path.relative(docsRoot, filePath))
-		.replace(/\.mdx?$/, '')
-		.replace(/\/index$/, '');
-}
-
 function addIndexEntry(index, key, entry) {
 	if (!key) return;
 	const normalized = key.trim();
@@ -142,7 +84,7 @@ export function createDocIndex() {
 
 	for (const filePath of walkFiles(docsRoot, markdownExtensions)) {
 		const slug = slugFromFile(filePath);
-		const title = parseTitle(filePath);
+		const title = parseDocMeta(filePath).title;
 		const entry = { filePath, url: `/${slug}/`, title, slug };
 		const basename = path.basename(filePath, path.extname(filePath));
 
@@ -287,7 +229,7 @@ export function resolveWikiLink(raw, sourceFile, docIndex, vaultIndex) {
 		href = `/${slugFromFile(filePath)}/`;
 		kind = 'page';
 		if (!alias) {
-			label = parseTitle(filePath);
+			label = parseDocMeta(filePath).title;
 		}
 	}
 

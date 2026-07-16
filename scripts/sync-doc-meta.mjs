@@ -3,29 +3,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { execSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { docsRoot, walkMarkdownFiles } from '../src/lib/docs-shared.mjs';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const docsRoot = path.join(repoRoot, 'docs');
 const write = process.argv.includes('--write');
-const ignoredDirs = new Set(['.obsidian', '.vitepress', 'superpowers', 'public', 'static', '_templates', 'attachments']);
-
-function walkMarkdownFiles(dir, files = []) {
-	if (!fs.existsSync(dir)) return files;
-
-	for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-		if (entry.isDirectory()) {
-			if (entry.name.startsWith('.') || ignoredDirs.has(entry.name)) continue;
-			walkMarkdownFiles(path.join(dir, entry.name), files);
-			continue;
-		}
-
-		if (/\.mdx?$/.test(entry.name) && entry.name !== '404.md' && entry.name !== '404.mdx') {
-			files.push(path.join(dir, entry.name));
-		}
-	}
-
-	return files;
-}
 
 function gitDate(filePath, args) {
 	try {
