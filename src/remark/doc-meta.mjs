@@ -23,8 +23,11 @@ export function remarkDocMeta() {
 		if (updated) parts.push(`更新 ${updated}`);
 
 		tree.children.push({
-			type: 'html',
-			value: `<p class="doc-meta">${parts.join(' · ')}</p>`,
+			type: 'paragraph',
+			data: {
+				hProperties: { className: ['doc-meta'] },
+			},
+			children: [{ type: 'text', value: parts.join(' · ') }],
 		});
 	};
 }

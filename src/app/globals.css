@@ -5,10 +5,9 @@
 /* 保留 Obsidian / wiki 语义样式 */
 @import '../styles/wiki-callouts.css';
 @import '../styles/wiki-task-lists.css';
-@import '../styles/wiki-lists.css';
 @import '../styles/wiki-inline.css';
 @import '../styles/wiki-resource-cards.css';
-@import '../styles/wiki-image-lightbox.css';
+@import '../styles/fumadocs-native-demo.css';
 
 :root {
 	--wiki-accent: var(--color-fd-primary);
