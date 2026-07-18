@@ -97,7 +97,7 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
 			// 兼容旧 MDX 缓存里可能残留的 WikiCalloutIcon 引用
 			WikiCalloutIcon: ({ html }: { html?: string }) =>
 				html ? (
-					<div className="callout-icon" dangerouslySetInnerHTML={{ __html: html }} />
+					<div className="wiki-callout-icon" dangerouslySetInnerHTML={{ __html: html }} />
 				) : null,
 		} as unknown as MDXComponents),
 		img: (props) => <WikiImage {...props} />,

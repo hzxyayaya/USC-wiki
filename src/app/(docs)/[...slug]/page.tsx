@@ -5,9 +5,11 @@ import {
 	DocsDescription,
 	DocsPage,
 	DocsTitle,
+	EditOnGitHub,
 } from 'fumadocs-ui/layouts/docs/page';
 import { createRelativeLink } from 'fumadocs-ui/mdx';
 import { getMDXComponents } from '@/components/mdx';
+import { getGithubEditUrl } from '@/lib/layout.shared';
 import { getPublishedPages, isDraftPage, source } from '@/lib/source';
 
 type PageProps = {
@@ -64,6 +66,9 @@ export default async function DocPage({ params }: PageProps) {
 					})}
 				/>
 			</DocsBody>
+			<div className="not-prose mt-6 flex flex-row flex-wrap items-center justify-start">
+				<EditOnGitHub href={getGithubEditUrl(page.path)} />
+			</div>
 		</DocsPage>
 	);
 }

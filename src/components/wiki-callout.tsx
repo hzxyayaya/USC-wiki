@@ -8,46 +8,51 @@ type WikiCalloutProps = {
 	children?: ReactNode;
 };
 
-function CalloutTitle({ type, title, fold }: { type: string; title: string; fold?: string }) {
+function CalloutIcon({ type }: { type: string }) {
 	return (
-		<>
-			<div
-				className="callout-icon"
-				dangerouslySetInnerHTML={{ __html: getCalloutIcon(type) }}
-			/>
-			<div className="callout-title-inner">{title}</div>
-			{fold ? <div className="callout-fold" /> : null}
-		</>
+		<div
+			className="wiki-callout-icon"
+			aria-hidden="true"
+			dangerouslySetInnerHTML={{ __html: getCalloutIcon(type) }}
+		/>
 	);
 }
 
 /**
- * Obsidian `> [!type]` callout。用真实 React 树渲染，避免 hast hName 造成 p>div hydration 错误。
+ * Obsidian `> [!type]` → Fumadocs 外观卡片（左色条 + 图标 + 标题/正文），
+ * 保留完整主题类型，不压缩成原生 5 类。
  */
 export function WikiCallout({ type = 'note', title, fold, children }: WikiCalloutProps) {
 	const calloutType = type.toLowerCase();
 	const heading = title || calloutType.charAt(0).toUpperCase() + calloutType.slice(1);
-	const className = ['callout', 'not-content', fold ? 'is-collapsible' : '']
-		.filter(Boolean)
-		.join(' ');
+	const isCollapsible = fold === '-' || fold === '+';
 
-	if (fold === '-' || fold === '+') {
+	if (isCollapsible) {
 		return (
-			<details className={className} data-callout={calloutType} {...(fold === '+' ? { open: true } : {})}>
-				<summary className="callout-title">
-					<CalloutTitle type={calloutType} title={heading} fold={fold} />
+			<details
+				className="wiki-callout not-content is-collapsible"
+				data-callout={calloutType}
+				{...(fold === '+' ? { open: true } : {})}
+			>
+				<summary className="wiki-callout-summary">
+					<div className="wiki-callout-bar" role="none" />
+					<CalloutIcon type={calloutType} />
+					<p className="wiki-callout-title">{heading}</p>
+					<span className="wiki-callout-fold" aria-hidden="true" />
 				</summary>
-				<div className="callout-content">{children}</div>
+				<div className="wiki-callout-content">{children}</div>
 			</details>
 		);
 	}
 
 	return (
-		<div className={className} data-callout={calloutType}>
-			<div className="callout-title">
-				<CalloutTitle type={calloutType} title={heading} />
+		<div className="wiki-callout not-content" data-callout={calloutType}>
+			<div className="wiki-callout-bar" role="none" />
+			<CalloutIcon type={calloutType} />
+			<div className="wiki-callout-body">
+				<p className="wiki-callout-title">{heading}</p>
+				<div className="wiki-callout-content">{children}</div>
 			</div>
-			<div className="callout-content">{children}</div>
 		</div>
 	);
 }

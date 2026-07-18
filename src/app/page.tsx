@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { HomeLayout } from 'fumadocs-ui/layouts/home';
 import { baseOptions } from '@/lib/layout.shared';
@@ -62,14 +63,6 @@ export default function HomePage() {
 		<HomeLayout {...baseOptions()}>
 			<div className="home-shell">
 				<section className="cover" aria-labelledby="home-title">
-					<div className="folio" aria-hidden="true">
-						<strong>01</strong>
-						<span>
-							THE STUDENT
-							<br />
-							FIELD GUIDE
-						</span>
-					</div>
 					<div className="cover-copy">
 						<p className="eyebrow">USC WIKI / 南华手册 · 由学生共同维护</p>
 						<h1 id="home-title">
@@ -78,6 +71,16 @@ export default function HomePage() {
 							你需要的答案
 						</h1>
 						<p>课程、办事、校园生活与竞赛资源，整理成一本可以反复翻阅的学生手册</p>
+					</div>
+					<div className="cover-brand">
+						<Image
+							src="/usc-logo.png"
+							alt="USC Wiki"
+							width={1024}
+							height={1024}
+							priority
+							className="cover-logo"
+						/>
 					</div>
 				</section>
 

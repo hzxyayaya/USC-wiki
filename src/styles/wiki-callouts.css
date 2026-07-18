@@ -1,203 +1,217 @@
-	:root {
-		--callout-line-height: 1.3;
-		--callout-border-width: 0px;
-		--callout-border-opacity: 0.25;
-		--callout-padding: 12px 12px 12px 24px;
-		--callout-radius: 4px;
-		--callout-title-color: inherit;
-		--callout-title-padding: 0;
-		--callout-title-size: inherit;
-		--callout-title-weight: 600;
-		--callout-content-gap: 0.625rem;
-		--callout-content-padding-block: 0.375rem;
-		--callout-content-padding: 0;
-		--callout-content-background: transparent;
-		--callout-default: 8, 109, 221;
-		--callout-info: 8, 109, 221;
-		--callout-todo: 8, 109, 221;
-		--callout-bug: 233, 49, 71;
-		--callout-error: 233, 49, 71;
-		--callout-fail: 233, 49, 71;
-		--callout-success: 8, 185, 78;
-		--callout-example: 120, 82, 238;
-		--callout-important: 0, 191, 188;
-		--callout-summary: 0, 191, 188;
-		--callout-tip: 0, 191, 188;
-		--callout-question: 236, 117, 0;
-		--callout-warning: 236, 117, 0;
-		--callout-quote: 158, 158, 158;
-		--callout-collapse-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiIgZD0ibTkgMThsNi02bC02LTYiLz48L3N2Zz4=");
-	}
+/*
+ * Obsidian `> [!type]` → Fumadocs 同构外观：
+ * rounded-xl + border + bg-fd-card + shadow + 左侧细色条
+ * 颜色按 data-callout 完整保留，不压缩成原生 5 类。
+ */
 
-	.callout {
-		overflow: hidden;
-		border-style: solid;
-		border-color: rgba(var(--callout-color), var(--callout-border-opacity));
-		border-width: var(--callout-border-width);
-		border-radius: var(--callout-radius);
-		margin: 1em 0;
-		background-color: rgba(var(--callout-color), 0.1);
-		padding: var(--callout-padding);
-		--callout-color: var(--callout-default);
-	}
+:root {
+	--wiki-callout-note: 59 130 246;
+	--wiki-callout-info: 37 99 235;
+	--wiki-callout-todo: 37 99 235;
+	--wiki-callout-tip: 20 184 166;
+	--wiki-callout-summary: 20 184 166;
+	--wiki-callout-success: 34 197 94;
+	--wiki-callout-question: 249 115 22;
+	--wiki-callout-warning: 245 158 11;
+	--wiki-callout-danger: 239 68 68;
+	--wiki-callout-fail: 239 68 68;
+	--wiki-callout-bug: 244 63 94;
+	--wiki-callout-example: 139 92 246;
+	--wiki-callout-quote: 148 163 184;
+	--wiki-callout-collapse-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiIgZD0ibTkgMThsNi02bC02LTYiLz48L3N2Zz4=");
+}
 
-	.callout > .callout-title {
-		padding: var(--callout-title-padding);
-		display: flex;
-		flex-flow: row nowrap;
-		align-items: flex-start;
-		gap: 4px;
-		margin: 0;
-		font-size: var(--callout-title-size);
-		line-height: var(--callout-line-height);
-		color: rgb(var(--callout-color));
-	}
+.wiki-callout {
+	--callout-color: var(--wiki-callout-note);
+	display: flex;
+	gap: 0.5rem;
+	margin: 1rem 0;
+	padding: 0.75rem;
+	padding-inline-start: 0.25rem;
+	border-radius: 0.75rem;
+	border: 1px solid var(--color-fd-border);
+	background-color: var(--color-fd-card);
+	color: var(--color-fd-card-foreground);
+	font-size: 0.875rem;
+	line-height: 1.5;
+	box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.06);
+}
 
-	details.callout > summary.callout-title {
-		cursor: pointer;
-		list-style: none;
-	}
+.wiki-callout-bar {
+	width: 0.125rem;
+	flex: 0 0 auto;
+	align-self: stretch;
+	border-radius: 0.125rem;
+	background-color: rgb(var(--callout-color) / 0.5);
+}
 
-	details.callout > summary.callout-title::-webkit-details-marker {
-		display: none;
-	}
+.wiki-callout-icon {
+	display: flex;
+	flex: 0 0 auto;
+	align-items: flex-start;
+	margin-inline-end: -0.125rem;
+	color: rgb(var(--callout-color));
+}
 
-	.callout > .callout-title > .callout-icon {
-		display: contents;
-	}
+.wiki-callout-icon svg {
+	width: 1.25rem;
+	height: 1.25rem;
+	display: block;
+	fill: none;
+	stroke: currentColor;
+}
 
-	.callout > .callout-title > .callout-icon svg {
-		flex: 0 0 1em;
-		width: 1em;
-		height: 1em;
-		display: block;
-		max-width: none;
-		align-self: flex-start;
-		margin: 0;
-		padding: 0;
-	}
+.wiki-callout-body {
+	display: flex;
+	flex: 1 1 auto;
+	flex-direction: column;
+	gap: 0.5rem;
+	min-width: 0;
+}
 
-	.callout > .callout-title > .callout-title-inner {
-		flex: 1 1 auto;
-		min-width: 0;
-		margin: 0;
-		font-weight: var(--callout-title-weight);
-		color: var(--callout-title-color);
-		line-height: var(--callout-line-height);
-	}
+.wiki-callout-title {
+	margin: 0;
+	font-weight: 500;
+	color: var(--color-fd-card-foreground);
+}
 
-	.callout > .callout-title > .callout-title-inner b,
-	.callout > .callout-title > .callout-title-inner strong {
-		font-weight: calc(var(--callout-title-weight) + 200);
-	}
+.wiki-callout-content {
+	overflow-x: auto;
+	color: var(--color-fd-muted-foreground);
+}
 
-	.callout > .callout-title > .callout-fold {
-		flex: 0 0 auto;
-		align-self: center;
-		margin: 0;
-		margin-inline-start: auto;
-		background-color: rgb(var(--callout-color));
-		mask-image: var(--callout-collapse-icon);
-		mask-size: 100%;
-		-webkit-mask-image: var(--callout-collapse-icon);
-		-webkit-mask-size: 100%;
-		height: 1em;
-		width: 1em;
-		transition: transform 100ms ease-in-out;
-	}
+.wiki-callout-content > :first-child {
+	margin-top: 0;
+}
 
-	details.callout:not([open]) > .callout-title > .callout-fold {
-		transform: rotate(-90deg);
-	}
+.wiki-callout-content > :last-child {
+	margin-bottom: 0;
+}
 
-	details.callout[open] > .callout-title > .callout-fold {
-		transform: rotate(90deg);
-	}
+/* —— 折叠 —— */
+.wiki-callout.is-collapsible {
+	flex-direction: column;
+	gap: 0;
+	padding-block: 0;
+	padding-inline-end: 0.75rem;
+}
 
-	.callout > .callout-title + .callout-content,
-	details.callout[open] > summary.callout-title + .callout-content {
-		margin-top: var(--callout-content-gap);
-		padding-block: var(--callout-content-padding-block);
-	}
+.wiki-callout-summary {
+	display: flex;
+	align-items: flex-start;
+	gap: 0.5rem;
+	padding: 0.75rem 0;
+	padding-inline-start: 0;
+	cursor: pointer;
+	list-style: none;
+}
 
-	.callout > .callout-content {
-		overflow-x: auto;
-		padding-inline: var(--callout-content-padding);
-		background-color: var(--callout-content-background);
-	}
+.wiki-callout-summary::-webkit-details-marker {
+	display: none;
+}
 
-	.callout > .callout-content > :first-child {
-		margin-top: 0;
-	}
+.wiki-callout.is-collapsible > .wiki-callout-summary > .wiki-callout-bar {
+	align-self: stretch;
+	min-height: 1.25rem;
+}
 
-	.callout > .callout-content > :last-child {
-		margin-bottom: 0;
-	}
+.wiki-callout.is-collapsible > .wiki-callout-summary > .wiki-callout-title {
+	flex: 1 1 auto;
+	min-width: 0;
+}
 
-	.callout[data-callout='note'] {
-		--callout-color: var(--callout-default);
-	}
+.wiki-callout-fold {
+	flex: 0 0 auto;
+	align-self: center;
+	width: 1rem;
+	height: 1rem;
+	margin-inline-start: auto;
+	background-color: rgb(var(--callout-color));
+	mask-image: var(--wiki-callout-collapse-icon);
+	mask-size: 100%;
+	-webkit-mask-image: var(--wiki-callout-collapse-icon);
+	-webkit-mask-size: 100%;
+	transition: transform 100ms ease-in-out;
+	transform: rotate(-90deg);
+}
 
-	.callout[data-callout='info'] {
-		--callout-color: var(--callout-info);
-	}
+.wiki-callout.is-collapsible[open] > .wiki-callout-summary > .wiki-callout-fold {
+	transform: rotate(90deg);
+}
 
-	.callout[data-callout='todo'] {
-		--callout-color: var(--callout-todo);
-	}
+.wiki-callout.is-collapsible > .wiki-callout-content {
+	padding: 0 0 0.75rem 1.375rem;
+}
 
-	.callout[data-callout='abstract'],
-	.callout[data-callout='summary'],
-	.callout[data-callout='tldr'] {
-		--callout-color: var(--callout-summary);
-	}
+.wiki-callout.is-collapsible:not([open]) > .wiki-callout-content {
+	display: none;
+}
 
-	.callout[data-callout='tip'],
-	.callout[data-callout='hint'],
-	.callout[data-callout='important'],
-	.callout[data-callout='tips'] {
-		--callout-color: var(--callout-tip);
-	}
+/* —— 主题色（完整覆盖） —— */
+.wiki-callout[data-callout='note'] {
+	--callout-color: var(--wiki-callout-note);
+}
 
-	.callout[data-callout='success'],
-	.callout[data-callout='check'],
-	.callout[data-callout='done'] {
-		--callout-color: var(--callout-success);
-	}
+.wiki-callout[data-callout='info'] {
+	--callout-color: var(--wiki-callout-info);
+}
 
-	.callout[data-callout='question'],
-	.callout[data-callout='help'],
-	.callout[data-callout='faq'] {
-		--callout-color: var(--callout-question);
-	}
+.wiki-callout[data-callout='todo'] {
+	--callout-color: var(--wiki-callout-todo);
+}
 
-	.callout[data-callout='warning'],
-	.callout[data-callout='caution'],
-	.callout[data-callout='attention'],
-	.callout[data-callout='warn'] {
-		--callout-color: var(--callout-warning);
-	}
+.wiki-callout[data-callout='abstract'],
+.wiki-callout[data-callout='summary'],
+.wiki-callout[data-callout='tldr'] {
+	--callout-color: var(--wiki-callout-summary);
+}
 
-	.callout[data-callout='failure'],
-	.callout[data-callout='fail'],
-	.callout[data-callout='missing'] {
-		--callout-color: var(--callout-fail);
-	}
+.wiki-callout[data-callout='tip'],
+.wiki-callout[data-callout='hint'],
+.wiki-callout[data-callout='important'],
+.wiki-callout[data-callout='tips'] {
+	--callout-color: var(--wiki-callout-tip);
+}
 
-	.callout[data-callout='danger'],
-	.callout[data-callout='error'] {
-		--callout-color: var(--callout-error);
-	}
+.wiki-callout[data-callout='success'],
+.wiki-callout[data-callout='check'],
+.wiki-callout[data-callout='done'] {
+	--callout-color: var(--wiki-callout-success);
+}
 
-	.callout[data-callout='bug'] {
-		--callout-color: var(--callout-bug);
-	}
+.wiki-callout[data-callout='question'],
+.wiki-callout[data-callout='help'],
+.wiki-callout[data-callout='faq'] {
+	--callout-color: var(--wiki-callout-question);
+}
 
-	.callout[data-callout='example'] {
-		--callout-color: var(--callout-example);
-	}
+.wiki-callout[data-callout='warning'],
+.wiki-callout[data-callout='caution'],
+.wiki-callout[data-callout='attention'],
+.wiki-callout[data-callout='warn'] {
+	--callout-color: var(--wiki-callout-warning);
+}
 
-	.callout[data-callout='quote'],
-	.callout[data-callout='cite'] {
-		--callout-color: var(--callout-quote);
-	}
+.wiki-callout[data-callout='failure'],
+.wiki-callout[data-callout='fail'],
+.wiki-callout[data-callout='missing'] {
+	--callout-color: var(--wiki-callout-fail);
+}
+
+.wiki-callout[data-callout='danger'],
+.wiki-callout[data-callout='error'] {
+	--callout-color: var(--wiki-callout-danger);
+}
+
+.wiki-callout[data-callout='bug'] {
+	--callout-color: var(--wiki-callout-bug);
+}
+
+.wiki-callout[data-callout='example'] {
+	--callout-color: var(--wiki-callout-example);
+}
+
+.wiki-callout[data-callout='quote'],
+.wiki-callout[data-callout='cite'] {
+	--callout-color: var(--wiki-callout-quote);
+}

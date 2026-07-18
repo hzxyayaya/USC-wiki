@@ -21,7 +21,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 							'Search(search dialog)': '搜索',
 							'On this page(table of contents)': '本页目录',
 							'No Headings(table of contents)': '本页暂无标题',
-							'Edit on GitHub(edit page)': '在 GitHub 上编辑',
+							'Edit on GitHub(edit page)': '在 GitHub 中编辑',
 							'Last updated on(page footer)': '最后更新于',
 							'Choose a language(language switcher)': '选择语言',
 							'Toggle Theme(theme switcher)(aria-label)': '切换主题',
