@@ -1,22 +1,20 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import GithubSlugger from 'github-slugger';
+import {
+	docsRoot,
+	ignoredAssetDirs,
+	markdownExtensions,
+	parseDocMeta,
+	slugFromFile,
+	toPosix,
+	vaultFileExtensions,
+	walkFiles,
+} from '../lib/docs-shared.mjs';
 
-const docsRoot = path.resolve('docs');
-const ignoredDirs = new Set(['.obsidian', '.vitepress', 'superpowers', 'public', '_templates']);
-const markdownExtensions = new Set(['.md', '.mdx']);
-export const vaultFileExtensions = new Set([
-	'.png',
-	'.jpg',
-	'.jpeg',
-	'.gif',
-	'.webp',
-	'.svg',
-	'.pdf',
-	'.doc',
-	'.docx',
-]);
+export { vaultFileExtensions } from '../lib/docs-shared.mjs';
+
 const imagePattern = /\.(png|jpe?g|gif|webp|svg)$/i;
-
 export function isImageTarget(target) {
 	return imagePattern.test(target.trim());
 }
@@ -25,13 +23,19 @@ export function isVaultFileTarget(target) {
 	return vaultFileExtensions.has(path.extname(target.trim().toLowerCase()));
 }
 
-function toPosix(value) {
-	return value.split(path.sep).join('/');
+/**
+ * 生成 vault 资源 URL。
+ * 磁盘上的 public/vault 使用 Unicode 目录名；这里保留中文路径，
+ * 只编码空格等会破坏 URL 的字符。浏览器请求时会自行百分号编码，
+ * Netlify / nginx 等会解码回 Unicode 路径。
+ */
+function encodeVaultSegment(segment) {
+	return segment.replace(/[?#\[\]%]/g, (ch) => encodeURIComponent(ch)).replace(/ /g, '%20');
 }
 
 export function toVaultUrl(absPath) {
 	const relative = toPosix(path.relative(docsRoot, absPath));
-	return `/vault/${relative.split('/').map(encodeURIComponent).join('/')}`;
+	return `/vault/${relative.split('/').map(encodeVaultSegment).join('/')}`;
 }
 
 function scoreCandidate(candidate, sourceFile) {
@@ -46,29 +50,10 @@ function pickClosest(candidates, sourceFile) {
 	return [...candidates].sort((a, b) => scoreCandidate(a, sourceFile) - scoreCandidate(b, sourceFile))[0];
 }
 
-function walkFiles(dir, extensions, results = []) {
-	if (!fs.existsSync(dir)) return results;
-
-	for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-		const fullPath = path.join(dir, entry.name);
-
-		if (entry.isDirectory()) {
-			if (entry.name.startsWith('.') || ignoredDirs.has(entry.name)) continue;
-			walkFiles(fullPath, extensions, results);
-			continue;
-		}
-
-		const extension = path.extname(entry.name).toLowerCase();
-		if (extensions.has(extension)) results.push(fullPath);
-	}
-
-	return results;
-}
-
 export function createVaultIndex() {
 	const byBasename = new Map();
 
-	for (const filePath of walkFiles(docsRoot, vaultFileExtensions)) {
+	for (const filePath of walkFiles(docsRoot, vaultFileExtensions, ignoredAssetDirs)) {
 		const basename = path.basename(filePath);
 		const list = byBasename.get(basename) || [];
 		list.push(filePath);
@@ -81,25 +66,6 @@ export function createVaultIndex() {
 /** @deprecated Use createVaultIndex */
 export function createAssetIndex() {
 	return createVaultIndex();
-}
-
-function parseTitle(filePath) {
-	const content = fs.readFileSync(filePath, 'utf-8');
-	const frontmatter = content.match(/^---\r?\n([\s\S]*?)\r?\n---/)?.[1];
-	const title = frontmatter?.match(/^title\s*:\s*(.+)$/m)?.[1];
-
-	return (
-		title?.trim().replace(/^['"]|['"]$/g, '') ||
-		content.match(/^#\s+(.+)$/m)?.[1]?.trim() ||
-		path.basename(filePath, path.extname(filePath))
-	);
-}
-
-function slugFromFile(filePath) {
-	return toPosix(path.relative(docsRoot, filePath))
-		.replace(/\.mdx?$/, '')
-		.replace(/\/index$/, '')
-		.toLowerCase();
 }
 
 function addIndexEntry(index, key, entry) {
@@ -118,11 +84,12 @@ export function createDocIndex() {
 
 	for (const filePath of walkFiles(docsRoot, markdownExtensions)) {
 		const slug = slugFromFile(filePath);
-		const title = parseTitle(filePath);
+		const title = parseDocMeta(filePath).title;
 		const entry = { filePath, url: `/${slug}/`, title, slug };
 		const basename = path.basename(filePath, path.extname(filePath));
 
 		addIndexEntry(index, slug, entry);
+		addIndexEntry(index, slug.toLowerCase(), entry);
 		addIndexEntry(index, slug.replace(/\//g, ' / '), entry);
 		addIndexEntry(index, basename, entry);
 		addIndexEntry(index, basename.toLowerCase(), entry);
@@ -210,14 +177,12 @@ function resolveDocTarget(target, sourceFile, docIndex) {
 	return null;
 }
 
+/**
+ * 与 Fumadocs remark-heading（github-slugger）对齐，避免 #锚点对不上。
+ */
 export function slugifyHeading(value) {
-	return value
-		.trim()
-		.toLowerCase()
-		.replace(/\s+/g, '-')
-		.replace(/[^\p{L}\p{N}-]+/gu, '')
-		.replace(/-+/g, '-')
-		.replace(/^-|-$/g, '');
+	const slugger = new GithubSlugger();
+	return slugger.slug(value.trim());
 }
 
 export function parseWikiLink(raw) {
@@ -264,7 +229,7 @@ export function resolveWikiLink(raw, sourceFile, docIndex, vaultIndex) {
 		href = `/${slugFromFile(filePath)}/`;
 		kind = 'page';
 		if (!alias) {
-			label = parseTitle(filePath);
+			label = parseDocMeta(filePath).title;
 		}
 	}
 

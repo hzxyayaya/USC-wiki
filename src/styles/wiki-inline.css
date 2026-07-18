@@ -1,58 +1,57 @@
-@layer starlight.user {
-	mark {
-		background: var(--sl-color-accent-low);
-		color: inherit;
-		padding: 0.05em 0.25em;
-		border-radius: 0.2em;
-	}
+.wiki-embed-image {
+	display: block;
+	max-width: 100%;
+	height: auto;
+	margin-block: 0.75rem;
+	border-radius: 0.375rem;
+}
 
-	.sl-markdown-content code:not(pre code) {
-		background: var(--sl-color-accent-low);
-		color: var(--sl-color-accent);
-		border-color: color-mix(in srgb, var(--sl-color-accent) 12%, var(--sl-color-hairline));
-	}
+.wiki-embed-missing {
+	margin-block: 0.75rem;
+	padding: 0.75rem 1rem;
+	border-radius: 0.375rem;
+	border: 1px dashed color-mix(in srgb, var(--color-fd-warning, #f3be62) 55%, transparent);
+	background: color-mix(in srgb, var(--color-fd-warning, #f3be62) 12%, transparent);
+	color: var(--color-fd-warning, #f3be62);
+	font-size: 0.95em;
+}
 
-	.wiki-embed-image {
-		display: block;
-		max-width: 100%;
-		height: auto;
-		margin-block: 0.75rem;
-		border-radius: var(--callout-radius, 4px);
-	}
+.wiki-link {
+	color: var(--color-fd-primary);
+	text-decoration: none;
+	border-bottom: 1px solid color-mix(in srgb, var(--color-fd-primary) 35%, transparent);
+	transition:
+		color 140ms ease,
+		border-color 140ms ease;
+}
 
-	.wiki-embed-missing {
-		margin-block: 0.75rem;
-		padding: 0.75rem 1rem;
-		border-radius: var(--callout-radius, 4px);
-		border: 1px dashed color-mix(in srgb, var(--sl-color-orange-high) 55%, transparent);
-		background: color-mix(in srgb, var(--sl-color-orange-high) 12%, transparent);
-		color: var(--sl-color-orange-high);
-		font-size: 0.95em;
-	}
+.wiki-link:hover {
+	color: var(--color-fd-primary);
+	border-bottom-color: var(--color-fd-primary);
+	text-decoration: none;
+}
 
-	.wiki-link {
-		text-decoration: none;
-	}
+.wiki-link-attachment::after {
+	content: ' ↗';
+	font-size: 0.85em;
+	opacity: 0.75;
+}
 
-	.wiki-link:hover {
-		text-decoration: underline;
-	}
+.wiki-link-unresolved {
+	color: var(--color-fd-warning, #f3be62);
+	border-bottom: 1px dashed color-mix(in srgb, var(--color-fd-warning, #f3be62) 60%, transparent);
+	cursor: help;
+}
 
-	.wiki-link-attachment::after {
-		content: ' ↗';
-		font-size: 0.85em;
-		opacity: 0.75;
-	}
+.katex-display {
+	overflow-x: auto;
+	overflow-y: hidden;
+	padding-block: 0.25rem;
+}
 
-	.wiki-link-unresolved {
-		color: var(--sl-color-orange-high);
-		border-bottom: 1px dashed color-mix(in srgb, var(--sl-color-orange-high) 60%, transparent);
-		cursor: help;
-	}
-
-	.katex-display {
-		overflow-x: auto;
-		overflow-y: hidden;
-		padding-block: 0.25rem;
-	}
+mark {
+	background: color-mix(in srgb, var(--color-fd-primary) 22%, transparent);
+	color: inherit;
+	padding: 0.05em 0.25em;
+	border-radius: 0.2em;
 }

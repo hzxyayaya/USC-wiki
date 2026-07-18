@@ -1,9 +1,11 @@
 [build]
   command = "pnpm build"
-  publish = "dist"
+  publish = "out"
 
 [build.environment]
   NODE_VERSION = "22"
+  NODE_OPTIONS = "--max-old-space-size=4096"
   SITE = "https://usc-wiki.netlify.app"
+  NEXT_PUBLIC_SITE_URL = "https://usc-wiki.netlify.app"
 
-# Astro 静态站点：各路径已有对应 index.html，无需 SPA fallback
+# Next.js 静态导出（output: 'export'）：产物在 out/，无需 @netlify/plugin-nextjs

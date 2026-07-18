@@ -1,45 +1,29 @@
-/* Task lists — fixed checkbox column, no Galaxy bullet interference */
+/* GFM 任务列表：去掉 .prose 默认圆点，保留原生 checkbox */
 
-.sl-markdown-content ul.contains-task-list,
-.sl-markdown-content ul.contains-task-list > li.task-list-item {
-	list-style: none !important;
-	padding-left: 0 !important;
+.prose ul.contains-task-list,
+.sl-markdown-content ul.contains-task-list {
+	list-style: none;
+	padding-left: 0;
+	margin-left: 0;
 }
 
-.sl-markdown-content ul.contains-task-list > li.task-list-item::before {
+.prose ul.contains-task-list > li.task-list-item,
+.sl-markdown-content ul.contains-task-list > li.task-list-item {
+	list-style: none;
+	padding-left: 0;
+	margin-left: 0;
+}
+
+.prose ul.contains-task-list > li.task-list-item::before,
+.prose ul.contains-task-list > li.task-list-item::marker,
+.sl-markdown-content ul.contains-task-list > li.task-list-item::before,
+.sl-markdown-content ul.contains-task-list > li.task-list-item::marker {
 	content: none !important;
 	display: none !important;
 }
 
-.sl-markdown-content ul.contains-task-list > li.task-list-item {
-	display: flex;
-	align-items: center;
-	gap: 0.5rem;
-}
-
+.prose li.task-list-item input[type='checkbox'],
 .sl-markdown-content li.task-list-item input[type='checkbox'] {
-	appearance: none;
-	-webkit-appearance: none;
-	flex: 0 0 1rem;
-	width: 1rem;
-	height: 1rem;
-	min-width: 1rem;
-	min-height: 1rem;
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-	border: 1.5px solid var(--sl-color-gray-5);
-	border-radius: 3px;
-	background: var(--sl-color-bg);
-}
-
-.sl-markdown-content li.task-list-item input[type='checkbox']:checked {
-	background: var(--sl-color-accent)
-		url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M2.5 6l2.5 2.5 4.5-5' stroke='white' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
-		center / 0.65rem no-repeat;
-	border-color: var(--sl-color-accent);
-}
-
-.sl-markdown-content li.task-list-item:has(input[type='checkbox']:checked) {
-	opacity: 0.7;
+	margin: 0 0.35em 0 0;
+	vertical-align: middle;
 }

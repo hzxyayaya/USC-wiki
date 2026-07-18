@@ -1,0 +1,338 @@
+---
+title: Fumadocs 组件演示
+description: Fumadocs 内置排版与 MDX 组件一览（不含 Wiki 自定义扩展）
+created: 2026-07-16
+updated: 2026-07-16
+---
+
+<div className="fumadocs-native-only">
+
+本页展示 **Fumadocs 内置** 的 Markdown 排版与 MDX 组件。**不是**「整个站点 UI 的全部」（侧栏、搜索、主题切换等见文末清单）。Wiki / Obsidian 扩展见 [Markdown 语法示例](/关于本站/markdown-demo/)。
+
+## 标题与正文
+
+### 三级标题（悬停可见锚点链接）
+
+#### 四级标题 h4
+
+##### 五级标题 h5
+
+###### 六级标题 h6
+
+正文段落。Fumadocs 通过 **Tailwind Typography**（`.prose`）渲染文档内容。
+
+**粗体**、*斜体*、~~删除线~~、[站内链接](/)、[外部链接](https://fumadocs.dev)。
+
+> 引用块：Fumadocs 默认引用样式。
+>
+> > 嵌套引用。
+
+---
+
+## 列表
+
+### 无序列表
+
+- 第一项
+- 第二项
+  - 嵌套 A
+  - 嵌套 B
+- 第三项
+
+### 有序列表
+
+1. 步骤一
+2. 步骤二
+3. 步骤三
+   1. 子步骤
+   2. 子步骤
+
+### 任务列表（GFM）
+
+- [x] 已完成
+- [ ] 待完成
+
+## 表格
+
+| 名称 | 类型 | 说明 |
+| :--- | :---: | ---: |
+| `title` | string | 页面标题 |
+| `full` | boolean | 是否全宽 |
+
+## 代码
+
+行内代码：`const x = 1`。
+
+### 代码块（Shiki 高亮）
+
+```typescript
+export function hello(name: string) {
+  return `Hello, ${name}!`;
+}
+```
+
+### 多标签代码块 CodeBlockTabs
+
+<CodeBlockTabs defaultValue="npm">
+<CodeBlockTabsList>
+<CodeBlockTabsTrigger value="npm">npm</CodeBlockTabsTrigger>
+<CodeBlockTabsTrigger value="pnpm">pnpm</CodeBlockTabsTrigger>
+<CodeBlockTabsTrigger value="yarn">yarn</CodeBlockTabsTrigger>
+</CodeBlockTabsList>
+<CodeBlockTab value="npm">
+
+```bash
+npm install fumadocs-ui
+```
+
+</CodeBlockTab>
+<CodeBlockTab value="pnpm">
+
+```bash
+pnpm add fumadocs-ui
+```
+
+</CodeBlockTab>
+<CodeBlockTab value="yarn">
+
+```bash
+yarn add fumadocs-ui
+```
+
+</CodeBlockTab>
+</CodeBlockTabs>
+
+## 图片（ImageZoom）
+
+所有 Markdown / Wiki 嵌入图片默认包一层 Fumadocs `ImageZoom`，点击可放大。
+
+![Fumadocs 图标|120](https://fumadocs.dev/icon.png)
+
+## Callout
+
+### 快捷写法
+
+<Callout type="info" title="Info">
+  信息提示，对应 `type="info"`。`warn` 会映射为 `warning`。
+</Callout>
+
+<Callout type="warn" title="Warn 别名">
+  `type="warn"` 等价于 warning。
+</Callout>
+
+<Callout type="warning" title="Warning">
+  警告提示。
+</Callout>
+
+<Callout type="error" title="Error">
+  错误提示。
+</Callout>
+
+<Callout type="success" title="Success">
+  成功提示。
+</Callout>
+
+<Callout type="idea" title="Idea">
+  想法 / 技巧类提示。
+</Callout>
+
+### 组合写法 CalloutContainer
+
+<CalloutContainer type="success">
+<CalloutTitle>组合 API</CalloutTitle>
+<CalloutDescription>
+  使用 `CalloutContainer` + `CalloutTitle` + `CalloutDescription` 手动拼装。
+</CalloutDescription>
+</CalloutContainer>
+
+## Cards
+
+<Cards>
+<Card title="文档" description="浏览 Wiki 内容" href="/学习指南/" />
+<Card title="关于本站" description="贡献与社区" href="/关于本站/" />
+<Card title="带正文" description="Card 也可包 children">
+  卡片内可放 **Markdown** 正文。
+</Card>
+</Cards>
+
+## Banner
+
+<Banner changeLayout={false}>
+  `Banner` 组件外观示意（正式用法放在 `layout.tsx` 并设置 `id`；带 `id` 时会注入 script 做关闭记忆，不宜在 MDX 正文里直接用）。
+</Banner>
+
+## InlineTOC
+
+<InlineTOC
+  items={[
+    { title: '标题与正文', url: '#标题与正文', depth: 2 },
+    { title: '列表', url: '#列表', depth: 2 },
+    { title: '代码', url: '#代码', depth: 2 },
+    { title: 'Callout', url: '#callout', depth: 2 },
+    { title: 'Steps', url: '#steps', depth: 2 },
+  ]}
+/>
+
+## DynamicCodeBlock
+
+<DynamicCodeBlock
+  lang="typescript"
+  code={'export const answer = 42;\nconsole.log(answer);'}
+/>
+
+## GithubInfo
+
+<GithubInfo owner="fuma-nama" repo="fumadocs" />
+
+## Steps
+
+<Steps>
+<Step>
+
+### 安装依赖
+
+```bash
+pnpm add fumadocs-ui fumadocs-core fumadocs-mdx
+```
+
+</Step>
+<Step>
+
+### 配置 MDX
+
+在 `source.config.ts` 中接入 Fumadocs MDX 插件。
+
+</Step>
+<Step>
+
+### 启动开发服务器
+
+```bash
+pnpm dev
+```
+
+</Step>
+</Steps>
+
+## Tabs
+
+<Tabs items={['预览', '源码']}>
+<Tab value="预览">
+
+这是 **Tabs** 组件的预览面板。
+
+</Tab>
+<Tab value="源码">
+
+```tsx
+<Tabs items={['预览', '源码']}>
+  <Tab value="预览">...</Tab>
+  <Tab value="源码">...</Tab>
+</Tabs>
+```
+
+</Tab>
+</Tabs>
+
+## Accordions
+
+<Accordions>
+<Accordion title="什么是 Fumadocs？" id="what-is-fumadocs">
+
+面向文档站点的 React 框架，内置侧栏、搜索、主题与 MDX 组件。
+
+</Accordion>
+<Accordion title="与 Wiki 扩展的区别？" id="wiki-diff">
+
+本页仅使用 Fumadocs 原生能力；`[[wikilink]]`、`> [!note]` 等见 Markdown 语法示例。
+
+</Accordion>
+</Accordions>
+
+## Files
+
+<Files>
+  <Folder name="src" defaultOpen>
+    <Folder name="app">
+      <File name="layout.tsx" />
+      <File name="page.tsx" />
+    </Folder>
+    <File name="components" />
+  </Folder>
+  <File name="package.json" />
+</Files>
+
+## TypeTable
+
+<TypeTable
+  type={{
+    title: {
+      description: '页面标题',
+      type: 'string',
+      required: true,
+    },
+    description: {
+      description: '页面描述，用于 SEO 与摘要',
+      type: 'string',
+    },
+    full: {
+      description: '是否使用全宽文档布局',
+      type: 'boolean',
+      default: 'false',
+    },
+  }}
+/>
+
+## 数学公式（项目扩展）
+
+本项目通过 `remark-math` + `rehype-katex` 启用，**非 Fumadocs 核心自带**。
+
+行内：$E = mc^2$
+
+块级：
+
+$$
+\sum_{i=1}^{n} i = \frac{n(n+1)}{2}
+$$
+
+## 脚注（GFM）
+
+Fumadocs 默认 remark 链支持 GFM 脚注[^fd]。
+
+[^fd]: https://fumadocs.dev
+
+## 完整清单
+
+### 本页已演示（MDX / 正文级）
+
+| 类别 | 内容 |
+| :--- | :--- |
+| Typography | 标题 h3–h6（带锚点）、段落、强调、引用、分隔线、列表、表格 |
+| GFM | 任务列表、脚注 |
+| 代码 | Shiki 代码块、`CodeBlockTabs` / `CodeBlockTab`、`DynamicCodeBlock` |
+| 组件 | `Callout`、`CalloutContainer`、`Cards`、`Steps`、`Tabs`、`Accordions`、`Files`、`TypeTable`、`Banner`（示意）、`InlineTOC`、`ImageZoom`、`GithubInfo` |
+
+### 站点布局级（不在正文里，但 Fumadocs 提供）
+
+| 组件 / 能力 | 在本站 |
+| :--- | :---: |
+| `DocsLayout` 侧栏目录 | ✅ 左侧栏 |
+| 搜索 `SearchDialog` | ✅ 顶栏 |
+| 明暗主题 `ThemeSwitch` | ✅ 顶栏 |
+| 右侧 TOC / Popover TOC | ⚠️ 本站暂用顶部 popover |
+| 面包屑 Breadcrumb | ✅ 默认布局 |
+| 页脚「最后更新」 | ✅ |
+| GitHub 编辑链接 | ✅ |
+
+### 未在本站启用 / 未演示
+
+| 项目 | 说明 |
+| :--- | :--- |
+| `Flux` / `Notebook` / `Home` 布局 | Fumadocs 可选布局，本站用 `DocsLayout` |
+| Open Graph `og` 图片生成 | 构建时 API |
+| Algolia / Orama 搜索 | 本站用静态 JSON 搜索 |
+| i18n 多语言切换 | 本站仅中文 |
+| `Card` 的 `icon` 属性 | 需传入 React 节点，演示页未展开 |
+| 数学公式 | 见上文，为项目额外插件 |
+
+</div>

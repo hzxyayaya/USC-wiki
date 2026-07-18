@@ -86,11 +86,17 @@ function splitTextNode(node, sourceFile, assetIndex) {
 	return nodes;
 }
 
+function resolveSourceFile(file) {
+	const raw = file?.path || file?.history?.[0];
+	if (!raw) return docsRoot;
+	return path.isAbsolute(raw) ? raw : path.resolve(raw);
+}
+
 export function rehypeWikiImageEmbeds() {
 	const assetIndex = createAssetIndex();
 
 	return function transformer(tree, file) {
-		const sourceFile = file?.path || file?.history?.[0] || docsRoot;
+		const sourceFile = resolveSourceFile(file);
 
 		visit(tree, 'text', (node, index, parent) => {
 			if (!parent || skipParents.has(parent.tagName) || !embedPattern.test(node.value)) return;

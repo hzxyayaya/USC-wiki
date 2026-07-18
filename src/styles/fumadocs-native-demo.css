@@ -1,0 +1,17 @@
+.prose .doc-meta {
+	margin-top: 2rem;
+	padding-top: 1rem;
+	border-top: 1px solid var(--color-fd-border);
+	font-size: 0.75rem;
+	color: var(--color-fd-muted-foreground);
+	text-align: end;
+}
+
+/* fumadocs-demo：展示原生 mark / 图片，不受 wiki-inline 影响 */
+
+.prose .fumadocs-native-only mark {
+	background: revert;
+	color: inherit;
+	padding: revert;
+	border-radius: revert;
+}

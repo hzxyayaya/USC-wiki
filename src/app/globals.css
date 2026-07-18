@@ -1,0 +1,48 @@
+@import 'tailwindcss';
+@import 'fumadocs-ui/css/neutral.css';
+@import 'fumadocs-ui/css/preset.css';
+
+/* 保留 Obsidian / wiki 语义样式 */
+@import '../styles/wiki-callouts.css';
+@import '../styles/wiki-task-lists.css';
+@import '../styles/wiki-inline.css';
+@import '../styles/wiki-resource-cards.css';
+@import '../styles/fumadocs-native-demo.css';
+
+:root {
+	--wiki-accent: var(--color-fd-primary);
+	--font-sans: 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+	--font-serif: 'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', SimSun, serif;
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+	font-family: var(--font-sans);
+}
+
+.cover h1,
+.chapter strong {
+	font-family: var(--font-serif), serif;
+}
+
+/*
+ * 目录暂用顶部横向弹出（popover），关闭右侧栏。
+ * 后续若改回右侧 TOC，删掉这段并打开 page 里的 tableOfContent 即可。
+ */
+#nd-docs-layout {
+	--fd-toc-width: 0px;
+	--fd-toc-popover-height: 2.5rem;
+}
+
+#nd-toc,
+#nd-toc-placeholder {
+	display: none !important;
+}
+
+[data-toc-popover] {
+	display: block !important;
+}
+
+

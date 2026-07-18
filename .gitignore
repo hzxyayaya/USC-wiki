@@ -4,14 +4,18 @@ node_modules/
 # Build output
 # Astro
 dist/
+.next/
+out/
 .astro/
 public/vault/
 public/pagefind/
+public/search-index.json
 src/content/docs/
 
-# Next.js
+# Next.js / Fumadocs
 .next/
 out/
+.source/
 build/
 *.tsbuildinfo
 .vercel
