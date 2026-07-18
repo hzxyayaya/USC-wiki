@@ -33,6 +33,9 @@ jobs:
       - name: Build Static Site
         run: pnpm build
 
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
       - name: Deploy to Vercel and Comment Preview URL
         uses: BetaHuhn/deploy-to-vercel-action@v1
         with:
