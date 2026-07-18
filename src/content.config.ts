@@ -15,7 +15,7 @@ export const collections = {
 				'!superpowers/**',
 				'!_templates/**',
 				'!public/**',
-				'!static/**',
+				'!**/static/**',
 				'!**/attachments/**',
 			],
 		}),

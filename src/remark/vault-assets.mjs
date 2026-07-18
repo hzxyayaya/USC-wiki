@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const docsRoot = path.resolve('docs');
-const ignoredDirs = new Set(['.obsidian', '.vitepress', 'superpowers', 'public', 'static', '_templates']);
+const ignoredDirs = new Set(['.obsidian', '.vitepress', 'superpowers', 'public', '_templates']);
 const markdownExtensions = new Set(['.md', '.mdx']);
 export const vaultFileExtensions = new Set([
 	'.png',
@@ -143,14 +143,14 @@ export function resolveVaultAsset(target, sourceFile, vaultIndex) {
 	if (normalized.includes('/')) {
 		candidates.push(path.join(sourceDir, normalized), path.join(docsRoot, normalized));
 		const basename = path.basename(normalized);
-		for (const folder of ['attachments', 'attachment', 'assets', 'static']) {
+		for (const folder of ['attachments', 'attachment', 'assets']) {
 			candidates.push(path.join(sourceDir, folder, basename));
 		}
 		const basenameMatches = vaultIndex.get(basename);
 		if (basenameMatches) candidates.push(...basenameMatches);
 	} else {
 		candidates.push(path.join(sourceDir, normalized));
-		for (const folder of ['attachments', 'attachment', 'assets', 'static']) {
+		for (const folder of ['attachments', 'attachment', 'assets']) {
 			candidates.push(path.join(sourceDir, folder, normalized));
 			candidates.push(path.join(docsRoot, folder, normalized));
 		}
