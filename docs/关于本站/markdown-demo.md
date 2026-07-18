@@ -172,7 +172,7 @@ $$
 Obsidian 风格内部链接，语法参考[官方文档](https://obsidian.md/zh/help/obsidian-flavored-markdown)。
 
 - 链接到其他页面：[[gpa]]、[[templates|模板下载]]
-- 链接到附件：[[attachments/Pasted image 20260327194126.png|示例图片文件]]
+- 链接到附件：[[markdown-demo-Wiki 链接-块级公式.png|示例图片文件]]
 - 带标题锚点：[[markdown-demo#callout-提示框|Callout 章节]]
 
 ## 图片嵌入
@@ -181,15 +181,15 @@ Obsidian 风格图片嵌入，语法参考[官方文档](https://obsidian.md/zh/
 
 ### Wiki 链接嵌入
 
-![[attachments/Pasted image 20260327194126.png]]
+![[markdown-demo-Wiki 链接-块级公式.png]]
 
 指定宽度（等比缩放）：
 
-![[attachments/Pasted image 20260327194126.png|240]]
+![[markdown-demo-Wiki 链接-块级公式.png|240]]
 
 指定宽高：
 
-![[attachments/Pasted image 20260327194126.png|180x120]]
+![[markdown-demo-Wiki 链接-块级公式.png|180x120]]
 
 ### Markdown 网络图片
 
