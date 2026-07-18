@@ -11,7 +11,7 @@
     "postinstall": "fumadocs-mdx",
     "predev": "pnpm run sync:vault && pnpm run build:search",
     "dev": "next dev --webpack",
-    "start": "next start",
+    "start": "pnpm preview",
     "prebuild": "pnpm run sync:vault && pnpm run build:search",
     "build": "next build",
     "preview": "npx serve out"

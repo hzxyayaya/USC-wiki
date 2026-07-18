@@ -22,7 +22,7 @@ Closes #123
 
 ## 📖 预览检查
 
-在本地检查 Astro / Starlight 是否正常渲染：
+在本地检查 Next.js / Fumadocs 是否正常渲染：
 
 ```bash
 pnpm install
