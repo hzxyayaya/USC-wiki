@@ -31,6 +31,8 @@ export const vaultFileExtensions = new Set([
 	'.pdf',
 	'.doc',
 	'.docx',
+	'.xls',
+	'.xlsx',
 ]);
 
 export function toPosix(value) {

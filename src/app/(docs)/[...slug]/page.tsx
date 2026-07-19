@@ -10,6 +10,7 @@ import {
 import { createRelativeLink } from 'fumadocs-ui/mdx';
 import { getMDXComponents } from '@/components/mdx';
 import { getGithubEditUrl } from '@/lib/layout.shared';
+import { getPageFooterItems } from '@/lib/page-navigation.mjs';
 import { getPublishedPages, isDraftPage, source } from '@/lib/source';
 
 type PageProps = {
@@ -37,6 +38,7 @@ export default async function DocPage({ params }: PageProps) {
 		<DocsPage
 			toc={page.data.toc}
 			full={page.data.full}
+			footer={{ items: getPageFooterItems(source.getPageTree(), page) }}
 			tableOfContent={{
 				// 暂用顶部横向弹出目录，右侧栏先关掉
 				enabled: false,

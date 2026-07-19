@@ -14,6 +14,7 @@
     "start": "pnpm preview",
     "prebuild": "pnpm run sync:vault && pnpm run build:search",
     "build": "next build",
+    "test": "tsx --test tests/*.test.mjs",
     "preview": "npx serve out"
   },
   "dependencies": {
