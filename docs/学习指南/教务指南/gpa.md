@@ -9,7 +9,7 @@ updated: 2026-06-21
 学校采用 5.0 学分制。GPA 计算公式如下：
 
 $$
-GPA = \frac{\sum (课程学分 \times 课程绩点)}{\sum 课程学分}
+GPA = \frac{\sum (\text{课程学分} \times \text{课程绩点})}{\sum \text{课程学分}}
 $$
 
 ## 绩点对照表
@@ -19,8 +19,8 @@ $$
 $$
 \text{绩点}=
 \begin{cases}
-1.0+(分数-60)/10 & \text{if } 分数 \geq 60 \\
-0 & \text{if } 分数 \lt 60
+1.0+(\text{分数}-60)/10 & \text{if } \text{分数} \geq 60 \\
+0 & \text{if } \text{分数} \lt 60
 \end{cases}
 $$
 

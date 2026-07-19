@@ -8,6 +8,6 @@ updated: 2026-06-21
 
 ## 已收录
 
-- [软件推荐](/竞赛与资源/软件与模板/software/)
-- [常用模板下载](/竞赛与资源/软件与模板/templates/)
-- [证书相关](/竞赛与资源/软件与模板/certificates/)
+- [[software|软件推荐]]
+- [[templates|常用模板下载]]
+- [[certificates|证书相关]]

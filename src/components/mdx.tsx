@@ -10,8 +10,9 @@ import { Step, Steps } from 'fumadocs-ui/components/steps';
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 import { TypeTable } from 'fumadocs-ui/components/type-table';
 import type { MDXComponents } from 'mdx/types';
-import type { ElementType, ReactNode } from 'react';
+import type { ComponentProps, CSSProperties, ElementType, ReactNode } from 'react';
 import { WikiCallout } from '@/components/wiki-callout';
+import { getImageSource } from '@/lib/image-source.mjs';
 
 function mergeClassName(...parts: Array<string | undefined | null | false>) {
 	return parts.filter(Boolean).join(' ');
@@ -27,9 +28,9 @@ function toClassName(className: unknown): string | undefined {
 
 const DefaultImg = defaultMdxComponents.img;
 
-function WikiImage(props: React.ComponentProps<typeof DefaultImg>) {
+function MdxImage(props: ComponentProps<typeof DefaultImg>) {
 	const className = mergeClassName('wiki-embed-image', toClassName(props.className));
-	const src = typeof props.src === 'string' ? props.src : undefined;
+	const src = getImageSource(props.src);
 
 	if (!src) {
 		return <DefaultImg {...props} className={className} />;
@@ -38,6 +39,32 @@ function WikiImage(props: React.ComponentProps<typeof DefaultImg>) {
 	return (
 		<ImageZoom src={src} alt={props.alt} width={props.width} height={props.height}>
 			<DefaultImg {...props} className={className} />
+		</ImageZoom>
+	);
+}
+
+export function WikiImage({ className, width, height, style, ...props }: ComponentProps<'img'>) {
+	const src = getImageSource(props.src);
+	if (!src) return null;
+
+	const imageStyle: CSSProperties = {
+		...style,
+		...(width ? { width: `${width}px` } : {}),
+		...(height ? { height: `${height}px` } : {}),
+	};
+
+	return (
+		<ImageZoom src={src} alt={props.alt} width={width} height={height}>
+			<img
+				{...props}
+				src={src}
+				width={width}
+				height={height}
+				loading="lazy"
+				decoding="async"
+				className={mergeClassName('wiki-embed-image', toClassName(className))}
+				style={imageStyle}
+			/>
 		</ImageZoom>
 	);
 }
@@ -94,13 +121,14 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
 			DynamicCodeBlock,
 			GithubInfo,
 			WikiCallout,
+			WikiImage,
 			// 兼容旧 MDX 缓存里可能残留的 WikiCalloutIcon 引用
 			WikiCalloutIcon: ({ html }: { html?: string }) =>
 				html ? (
 					<div className="wiki-callout-icon" dangerouslySetInnerHTML={{ __html: html }} />
 				) : null,
 		} as unknown as MDXComponents),
-		img: (props) => <WikiImage {...props} />,
+		img: (props) => <MdxImage {...props} />,
 		...components,
 	};
 }

@@ -9,7 +9,7 @@
     "sync:doc-meta": "node scripts/sync-doc-meta.mjs",
     "build:search": "tsx scripts/build-search-index.ts",
     "postinstall": "fumadocs-mdx",
-    "predev": "pnpm run sync:vault && pnpm run build:search",
+    "predev": "pnpm run sync:vault && pnpm run build:search -- --include-drafts",
     "dev": "next dev --webpack",
     "start": "pnpm preview",
     "prebuild": "pnpm run sync:vault && pnpm run build:search",

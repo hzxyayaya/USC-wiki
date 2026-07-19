@@ -77,6 +77,7 @@
 
 .wiki-callout-content {
 	overflow-x: auto;
+	overflow-y: hidden;
 	color: var(--color-fd-muted-foreground);
 }
 

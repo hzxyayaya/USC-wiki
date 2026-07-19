@@ -6,6 +6,7 @@ import { structure } from 'fumadocs-core/mdx-plugins';
 import { createTokenizer } from '@orama/tokenizers/mandarin';
 import {
 	parseDocMeta,
+	filterSearchableMarkdownFiles,
 	slugFromFile,
 	slugToUrl,
 	walkMarkdownFiles,
@@ -13,7 +14,8 @@ import {
 
 const outputPath = path.resolve('public/search-index.json');
 
-const files = walkMarkdownFiles();
+const includeDrafts = process.argv.includes('--include-drafts');
+const files = filterSearchableMarkdownFiles(walkMarkdownFiles(), { includeDrafts });
 const indexes = files.map((filePath) => {
 	const raw = fs.readFileSync(filePath, 'utf8');
 	const { content, data } = matter(raw);
@@ -49,5 +51,5 @@ fs.mkdirSync(path.dirname(outputPath), { recursive: true });
 fs.writeFileSync(outputPath, body);
 
 console.log(
-	`[search] wrote ${indexes.length} pages → ${path.relative(process.cwd(), outputPath)} (${body.length} bytes)`
+	`[search] wrote ${indexes.length} pages${includeDrafts ? ' (including drafts)' : ''} → ${path.relative(process.cwd(), outputPath)} (${body.length} bytes)`
 );

@@ -2,16 +2,11 @@ import type { ReactNode } from 'react';
 import { RootProvider } from 'fumadocs-ui/provider/next';
 import WikiSearchDialog from '@/components/search';
 import '@/app/globals.css';
+import 'katex/dist/katex.min.css';
 
 export default function RootLayout({ children }: { children: ReactNode }) {
 	return (
 		<html lang="zh-CN" suppressHydrationWarning>
-			<head>
-				<link
-					rel="stylesheet"
-					href="https://cdn.jsdelivr.net/npm/katex@0.17.0/dist/katex.min.css"
-				/>
-			</head>
 			<body className="flex min-h-screen flex-col">
 				<RootProvider
 					i18n={{

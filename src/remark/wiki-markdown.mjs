@@ -19,24 +19,19 @@ function toTitleCase(value) {
 	return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
 }
 
-/**
- * 使用 mdast image，而不是 raw html。
- * Fumadocs/MDX 默认不开启 allowDangerousHtml，html 节点会被丢掉。
- */
 function imageNode(url, alt, size = {}) {
+	const attributes = [
+		{ type: 'mdxJsxAttribute', name: 'src', value: url },
+		{ type: 'mdxJsxAttribute', name: 'alt', value: alt },
+	];
+	if (size.width) attributes.push({ type: 'mdxJsxAttribute', name: 'width', value: size.width });
+	if (size.height) attributes.push({ type: 'mdxJsxAttribute', name: 'height', value: size.height });
+
 	return {
-		type: 'image',
-		url,
-		alt,
-		data: {
-			hProperties: {
-				className: 'wiki-embed-image',
-				loading: 'lazy',
-				decoding: 'async',
-				...(size.width ? { width: size.width } : {}),
-				...(size.height ? { height: size.height } : {}),
-			},
-		},
+		type: 'mdxJsxTextElement',
+		name: 'WikiImage',
+		attributes,
+		children: [],
 	};
 }
 

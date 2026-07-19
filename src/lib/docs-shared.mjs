@@ -98,6 +98,15 @@ export function walkMarkdownFiles(dir = docsRoot, results = []) {
 }
 
 /**
+ * @param {string[]} files
+ * @param {{ includeDrafts?: boolean }} [options]
+ */
+export function filterSearchableMarkdownFiles(files, { includeDrafts = false } = {}) {
+	if (includeDrafts) return files;
+	return files.filter((filePath) => !parseDocMeta(filePath).draft);
+}
+
+/**
  * @param {string} [dir]
  * @param {string[]} [results]
  */
