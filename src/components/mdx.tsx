@@ -12,7 +12,7 @@ import { TypeTable } from 'fumadocs-ui/components/type-table';
 import type { MDXComponents } from 'mdx/types';
 import type { ComponentProps, CSSProperties, ElementType, ReactNode } from 'react';
 import { WikiCallout } from '@/components/wiki-callout';
-import { getImageSource } from '@/lib/image-source.mjs';
+import { getImageSource, hasCompleteImageDimensions } from '@/lib/image-source.mjs';
 
 function mergeClassName(...parts: Array<string | undefined | null | false>) {
 	return parts.filter(Boolean).join(' ');
@@ -36,9 +36,21 @@ function MdxImage(props: ComponentProps<typeof DefaultImg>) {
 		return <DefaultImg {...props} className={className} />;
 	}
 
+	const image = hasCompleteImageDimensions(props.src, props.width, props.height) ? (
+		<DefaultImg {...props} className={className} />
+	) : (
+		<img
+			{...(props as ComponentProps<'img'>)}
+			src={src}
+			loading={props.loading ?? 'lazy'}
+			decoding={props.decoding ?? 'async'}
+			className={className}
+		/>
+	);
+
 	return (
 		<ImageZoom src={src} alt={props.alt} width={props.width} height={props.height}>
-			<DefaultImg {...props} className={className} />
+			{image}
 		</ImageZoom>
 	);
 }

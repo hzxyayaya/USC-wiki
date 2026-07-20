@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+	<title>USC Wiki</title>
+	<path class="mark" d="M57 22H34c-7.73 0-14 6.27-14 14v56c0 7.73 6.27 14 14 14h23" />
+	<path class="mark" d="M71 106h23c7.73 0 14-6.27 14-14V36c0-7.73-6.27-14-14-14H71" />
+	<style>
+		.mark {
+			fill: none;
+			stroke: #16181d;
+			stroke-linecap: round;
+			stroke-linejoin: round;
+			stroke-width: 22;
+		}
+		@media (prefers-color-scheme: dark) {
+			.mark { stroke: #f5f5f4; }
+		}
+	</style>
+</svg>
