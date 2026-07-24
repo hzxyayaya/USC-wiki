@@ -1,8 +1,59 @@
+import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { RootProvider } from 'fumadocs-ui/provider/next';
 import WikiSearchDialog from '@/components/search';
+import { getSiteUrl, siteConfig } from '@/lib/site';
 import '@/app/globals.css';
 import 'katex/dist/katex.min.css';
+
+export const metadata: Metadata = {
+	metadataBase: getSiteUrl(),
+	title: {
+		default: siteConfig.title,
+		template: `%s｜${siteConfig.name}`,
+	},
+	description: siteConfig.description,
+	applicationName: siteConfig.name,
+	authors: [{ name: 'USC Wiki 社区', url: '/' }],
+	creator: 'USC Wiki 社区',
+	publisher: 'USC Wiki 社区',
+	alternates: {
+		canonical: '/',
+	},
+	openGraph: {
+		type: 'website',
+		locale: siteConfig.locale,
+		url: '/',
+		siteName: siteConfig.name,
+		title: siteConfig.title,
+		description: siteConfig.description,
+		images: [
+			{
+				url: siteConfig.ogImage,
+				width: 1200,
+				height: 630,
+				alt: 'USC Wiki｜南华大学学生校园知识库',
+			},
+		],
+	},
+	twitter: {
+		card: 'summary_large_image',
+		title: siteConfig.title,
+		description: siteConfig.description,
+		images: [siteConfig.ogImage],
+	},
+	robots: {
+		index: true,
+		follow: true,
+		googleBot: {
+			index: true,
+			follow: true,
+			'max-image-preview': 'large',
+			'max-snippet': -1,
+			'max-video-preview': -1,
+		},
+	},
+};
 
 export default function RootLayout({ children }: { children: ReactNode }) {
 	return (

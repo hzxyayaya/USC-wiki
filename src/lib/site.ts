@@ -19,7 +19,11 @@ export function getSiteUrl() {
 
 export const siteConfig = {
 	name: 'USC Wiki',
-	description: '南华大学学生维护的校园知识库，整理学业、校园生活与资源分享。',
+	title: 'USC Wiki｜南华大学学生校园知识库',
+	description:
+		'由南华大学学生共同维护的校园知识库，提供课程攻略、学习资源、校园生活和事务办理指南。',
+	locale: 'zh_CN',
+	ogImage: '/og-image.png',
 	get url() {
 		return getSiteUrl();
 	},

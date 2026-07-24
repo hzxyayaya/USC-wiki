@@ -25,16 +25,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
 	return [
 		{
 			url: `${baseUrl}/`,
-			changeFrequency: 'weekly',
-			priority: 1,
 		},
 		...pages.map((page) => {
 			const data = page.data as { updated?: string | Date };
 			return {
 				url: `${baseUrl}${withTrailingSlash(page.url)}`,
 				lastModified: parseLastModified(data.updated),
-				changeFrequency: 'weekly' as const,
-				priority: 0.8,
 			};
 		}),
 	];

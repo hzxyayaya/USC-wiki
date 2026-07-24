@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://usc-wiki.netlify.app/sitemap-index.xml

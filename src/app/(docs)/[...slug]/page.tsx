@@ -9,18 +9,84 @@ import {
 } from 'fumadocs-ui/layouts/docs/page';
 import { createRelativeLink } from 'fumadocs-ui/mdx';
 import { getMDXComponents } from '@/components/mdx';
+import { JsonLd } from '@/components/seo-json-ld';
 import { getGithubEditUrl } from '@/lib/layout.shared';
 import { getPageFooterItems } from '@/lib/page-navigation.mjs';
+import { siteConfig } from '@/lib/site';
 import { getPublishedPages, isDraftPage, source } from '@/lib/source';
 
 type PageProps = {
 	params: Promise<{ slug?: string[] }>;
 };
 
+type SeoPageData = {
+	title?: string;
+	description?: string;
+	created?: string | Date;
+	updated?: string | Date;
+};
+
 function hasWikiLinkClass(className: unknown) {
 	if (typeof className === 'string') return className.split(/\s+/).includes('wiki-link');
 	if (Array.isArray(className)) return className.includes('wiki-link');
 	return false;
+}
+
+function getPageDescription(page: NonNullable<ReturnType<typeof source.getPage>>) {
+	const data = page.data as SeoPageData;
+	const description = data.description?.trim();
+	if (description) return description;
+
+	const title = data.title || page.slugs.at(-1) || siteConfig.name;
+	const section = page.slugs[0];
+	const suffixBySection: Record<string, string> = {
+		新生入门: '入学准备与校园适应信息',
+		学习指南: '课程学习、教务与专业相关信息',
+		校园生活: '校园设施与日常生活信息',
+		事务办理: '校内事务办理流程与注意事项',
+		竞赛与资源: '竞赛经验、软件工具与学习资源',
+		关于本站: '站点使用与内容贡献说明',
+	};
+	const suffix = (section && suffixBySection[section]) || '校园学习与生活信息';
+
+	return `${title}：南华大学学生整理的${suffix}，内容由 USC Wiki 社区持续更新。`;
+}
+
+function toIsoDate(value: string | Date | undefined) {
+	if (!value) return undefined;
+	const date = value instanceof Date ? value : new Date(value);
+	return Number.isNaN(date.getTime()) ? undefined : date.toISOString();
+}
+
+function getBreadcrumbJsonLd(page: NonNullable<ReturnType<typeof source.getPage>>) {
+	const baseUrl = siteConfig.url.origin;
+	const itemListElement = [
+		{
+			'@type': 'ListItem',
+			position: 1,
+			name: '首页',
+			item: `${baseUrl}/`,
+		},
+		...page.slugs.map((_, index) => {
+			const slugs = page.slugs.slice(0, index + 1);
+			const breadcrumbPage = source.getPage(slugs);
+			const name = breadcrumbPage?.data.title || slugs.at(-1) || siteConfig.name;
+			const path = breadcrumbPage?.url || `/${slugs.join('/')}/`;
+
+			return {
+				'@type': 'ListItem',
+				position: index + 2,
+				name,
+				item: new URL(path, `${baseUrl}/`).toString(),
+			};
+		}),
+	];
+
+	return {
+		'@context': 'https://schema.org',
+		'@type': 'BreadcrumbList',
+		itemListElement,
+	};
 }
 
 export default async function DocPage({ params }: PageProps) {
@@ -47,6 +113,7 @@ export default async function DocPage({ params }: PageProps) {
 				enabled: true,
 			}}
 		>
+			<JsonLd data={getBreadcrumbJsonLd(page)} />
 			<DocsTitle>{title}</DocsTitle>
 			{page.data.description ? <DocsDescription>{page.data.description}</DocsDescription> : null}
 			<DocsBody>
@@ -86,8 +153,41 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 	const page = source.getPage(slug);
 	if (!page) return {};
 
+	const data = page.data as SeoPageData;
+	const title = data.title || siteConfig.name;
+	const description = getPageDescription(page);
+	const publishedTime = toIsoDate(data.created);
+	const modifiedTime = toIsoDate(data.updated);
+
 	return {
-		title: page.data.title || 'USC Wiki',
-		description: page.data.description,
+		title,
+		description,
+		alternates: {
+			canonical: page.url,
+		},
+		openGraph: {
+			type: 'article',
+			locale: siteConfig.locale,
+			url: page.url,
+			siteName: siteConfig.name,
+			title: `${title}｜${siteConfig.name}`,
+			description,
+			publishedTime,
+			modifiedTime,
+			images: [
+				{
+					url: siteConfig.ogImage,
+					width: 1200,
+					height: 630,
+					alt: `${title}｜${siteConfig.name}`,
+				},
+			],
+		},
+		twitter: {
+			card: 'summary_large_image',
+			title: `${title}｜${siteConfig.name}`,
+			description,
+			images: [siteConfig.ogImage],
+		},
 	};
 }

@@ -1,7 +1,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { HomeLayout } from 'fumadocs-ui/layouts/home';
+import { JsonLd } from '@/components/seo-json-ld';
 import { baseOptions } from '@/lib/layout.shared';
+import { siteConfig } from '@/lib/site';
 import { source } from '@/lib/source';
 import '@/styles/home-editorial.css';
 
@@ -58,9 +60,20 @@ const highlights = [
 
 export default function HomePage() {
 	const noteCount = source.getPages().length;
+	const siteUrl = siteConfig.url.origin;
+	const websiteJsonLd = {
+		'@context': 'https://schema.org',
+		'@type': 'WebSite',
+		name: siteConfig.name,
+		alternateName: '南华大学学生校园知识库',
+		url: `${siteUrl}/`,
+		description: siteConfig.description,
+		inLanguage: 'zh-CN',
+	};
 
 	return (
 		<HomeLayout {...baseOptions()}>
+			<JsonLd data={websiteJsonLd} />
 			<div className="home-shell">
 				<section className="cover" aria-labelledby="home-title">
 					<div className="cover-copy">
@@ -74,10 +87,10 @@ export default function HomePage() {
 					</div>
 					<div className="cover-brand">
 						<Image
-							src="/usc-logo.png"
-							alt="USC Wiki"
-							width={1024}
-							height={1024}
+							src="/usc-logo.webp"
+							alt="USC Wiki 南华大学学生校园知识库"
+							width={512}
+							height={512}
 							priority
 							className="cover-logo"
 						/>
