@@ -8,8 +8,10 @@ import {
 	EditOnGitHub,
 } from 'fumadocs-ui/layouts/docs/page';
 import { createRelativeLink } from 'fumadocs-ui/mdx';
+import { DocBreadcrumb } from '@/components/doc-breadcrumb';
 import { getMDXComponents } from '@/components/mdx';
 import { JsonLd } from '@/components/seo-json-ld';
+import { getBreadcrumbJsonLd, getDocBreadcrumbItems } from '@/lib/breadcrumbs';
 import { getGithubEditUrl } from '@/lib/layout.shared';
 import { getPageFooterItems } from '@/lib/page-navigation.mjs';
 import { siteConfig } from '@/lib/site';
@@ -58,37 +60,6 @@ function toIsoDate(value: string | Date | undefined) {
 	return Number.isNaN(date.getTime()) ? undefined : date.toISOString();
 }
 
-function getBreadcrumbJsonLd(page: NonNullable<ReturnType<typeof source.getPage>>) {
-	const baseUrl = siteConfig.url.origin;
-	const itemListElement = [
-		{
-			'@type': 'ListItem',
-			position: 1,
-			name: '首页',
-			item: `${baseUrl}/`,
-		},
-		...page.slugs.map((_, index) => {
-			const slugs = page.slugs.slice(0, index + 1);
-			const breadcrumbPage = source.getPage(slugs);
-			const name = breadcrumbPage?.data.title || slugs.at(-1) || siteConfig.name;
-			const path = breadcrumbPage?.url || `/${slugs.join('/')}/`;
-
-			return {
-				'@type': 'ListItem',
-				position: index + 2,
-				name,
-				item: new URL(path, `${baseUrl}/`).toString(),
-			};
-		}),
-	];
-
-	return {
-		'@context': 'https://schema.org',
-		'@type': 'BreadcrumbList',
-		itemListElement,
-	};
-}
-
 export default async function DocPage({ params }: PageProps) {
 	const { slug } = await params;
 	const page = source.getPage(slug);
@@ -99,9 +70,12 @@ export default async function DocPage({ params }: PageProps) {
 	const MDX = page.data.body;
 	const title = page.data.title || page.url;
 	const RelativeLink = createRelativeLink(source, page);
+	const breadcrumbItems = getDocBreadcrumbItems(page, (slugs) => source.getPage(slugs));
+	const visibleBreadcrumbItems = breadcrumbItems.slice(1, -1);
 
 	return (
 		<DocsPage
+			breadcrumb={{ enabled: false }}
 			toc={page.data.toc}
 			full={page.data.full}
 			footer={{ items: getPageFooterItems(source.getPageTree(), page) }}
@@ -113,7 +87,8 @@ export default async function DocPage({ params }: PageProps) {
 				enabled: true,
 			}}
 		>
-			<JsonLd data={getBreadcrumbJsonLd(page)} />
+			<DocBreadcrumb items={visibleBreadcrumbItems} />
+			<JsonLd data={getBreadcrumbJsonLd(breadcrumbItems, siteConfig.url.origin)} />
 			<DocsTitle>{title}</DocsTitle>
 			{page.data.description ? <DocsDescription>{page.data.description}</DocsDescription> : null}
 			<DocsBody>

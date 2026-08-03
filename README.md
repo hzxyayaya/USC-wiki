@@ -12,7 +12,7 @@ USC Wiki 基于 [Next.js](https://nextjs.org/) + [Fumadocs](https://fumadocs.dev
 - **事务办理**（`docs/事务办理/`）：报销、研学、驾照等流程。
 - **竞赛与资源**（`docs/竞赛与资源/`）：竞赛、软件模板、使用教程。
 
-想参与贡献？请阅读 [贡献指南](https://usc-wiki.netlify.app/关于本站/贡献指南/)（源码：`docs/关于本站/贡献指南.md`）。
+想参与贡献？请阅读 [贡献指南](https://uscwiki.com/关于本站/贡献指南/)（源码：`docs/关于本站/贡献指南.md`）。
 
 ## 技术栈
 
@@ -117,13 +117,13 @@ pnpm sync:doc-meta    # 预览/写入 created、updated frontmatter
 - 侧边栏由 Fumadocs 根据 `docs/` 目录与 frontmatter 自动生成。
 - 可通过 `order` 控制同级排序；`draft: true` 仅在开发环境可见。
 - 附件放在文档旁的 `attachments/`，构建时同步到 `/vault/...`。
-- 贡献方式详见 [贡献指南](https://usc-wiki.netlify.app/关于本站/贡献指南/)。
+- 贡献方式详见 [贡献指南](https://uscwiki.com/关于本站/贡献指南/)。
 
 ## 开发说明
 
 - 修改 Markdown、CSS 与普通组件时，Next.js dev server 会自动热更新。
 - 修改 `source.config.ts`、`src/remark/`、`src/rehype/` 等 MDX 插件时，可能需要重启 `pnpm dev`。
-- 生产站点 URL 可通过 `SITE` 或 `NEXT_PUBLIC_SITE_URL` 环境变量覆盖（默认 `https://usc-wiki.netlify.app`）。
+- 生产站点 URL 可通过 `SITE` 或 `NEXT_PUBLIC_SITE_URL` 环境变量覆盖（默认 `https://uscwiki.com`）。
 
 ## 许可证
 

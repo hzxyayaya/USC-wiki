@@ -1,4 +1,4 @@
-const DEFAULT_SITE_URL = 'https://usc-wiki.netlify.app';
+const DEFAULT_SITE_URL = 'https://uscwiki.com';
 
 function normalizeSiteUrl(raw: string) {
 	const trimmed = raw.trim();

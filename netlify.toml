@@ -5,7 +5,14 @@
 [build.environment]
   NODE_VERSION = "22"
   NODE_OPTIONS = "--max-old-space-size=4096"
-  SITE = "https://usc-wiki.netlify.app"
-  NEXT_PUBLIC_SITE_URL = "https://usc-wiki.netlify.app"
+  SITE = "https://uscwiki.com"
+  NEXT_PUBLIC_SITE_URL = "https://uscwiki.com"
 
 # Next.js 静态导出（output: 'export'）：产物在 out/，无需 @netlify/plugin-nextjs
+
+# 将旧的 Netlify 子域名永久转到正式域名，并保留原访问路径。
+[[redirects]]
+  from = "https://usc-wiki.netlify.app/*"
+  to = "https://uscwiki.com/:splat"
+  status = 301
+  force = true
