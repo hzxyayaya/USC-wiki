@@ -1,5 +1,12 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import {
+	createShortSlugMap,
+	resolveDocFilePath,
+	shortSlugFromFile,
+} from './short-slugs.mjs';
+
+export { legacySlugFromFile } from './short-slugs.mjs';
 
 export const docsRoot = path.resolve(process.cwd(), 'docs');
 
@@ -43,14 +50,44 @@ export function stripQuotes(value) {
 	return value?.trim().replace(/^['"]|['"]$/g, '');
 }
 
+function resolveFilePath(filePath) {
+	return resolveDocFilePath(filePath);
+}
+
+let cachedDocSlugMap;
+
 /**
+ * Build stable short routes for all documents and disambiguate collisions.
+ *
+ * @param {string[]} [files]
+ */
+export function getDocSlugMap(files = walkMarkdownFiles()) {
+	if (!files) return new Map();
+	if (!cachedDocSlugMap) {
+		cachedDocSlugMap = createShortSlugMap(
+			files.map((filePath) => ({
+				key: resolveFilePath(filePath),
+				filePath,
+				explicitSlug: parseDocMeta(filePath).slug,
+			})),
+		);
+	}
+
+	return cachedDocSlugMap;
+}
+
+/**
+ * Generate the public short route for a document. Chinese path segments use
+ * pinyin initials; explicit `slug` frontmatter remains available for important
+ * pages that need a hand-picked stable URL.
+ *
  * @param {string} filePath
  * @param {{ lowercase?: boolean }} [options]
  */
 export function slugFromFile(filePath, { lowercase = false } = {}) {
-	let slug = toPosix(path.relative(docsRoot, filePath))
-		.replace(/\.mdx?$/, '')
-		.replace(/\/index$/, '');
+	let slug =
+		getDocSlugMap().get(resolveFilePath(filePath)) ||
+		shortSlugFromFile(filePath, parseDocMeta(filePath).slug);
 	if (lowercase) slug = slug.toLowerCase();
 	return slug;
 }
@@ -135,8 +172,9 @@ export function parseDocMeta(filePath) {
 	const draftRaw = frontmatter.match(/^draft\s*:\s*(true|false)\s*$/m)?.[1];
 	const draft = draftRaw === 'true';
 	const description = stripQuotes(frontmatter.match(/^description\s*:\s*(.+)$/m)?.[1]);
+	const slug = stripQuotes(frontmatter.match(/^slug\s*:\s*(.+)$/m)?.[1]);
 	const created = stripQuotes(frontmatter.match(/^created\s*:\s*(.+)$/m)?.[1]);
 	const updated = stripQuotes(frontmatter.match(/^updated\s*:\s*(.+)$/m)?.[1]);
 
-	return { title, order, label, draft, description, created, updated };
+	return { title, order, label, draft, description, slug, created, updated };
 }

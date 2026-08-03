@@ -4,6 +4,7 @@ import GithubSlugger from 'github-slugger';
 import {
 	docsRoot,
 	ignoredAssetDirs,
+	legacySlugFromFile,
 	markdownExtensions,
 	parseDocMeta,
 	slugFromFile,
@@ -84,13 +85,17 @@ export function createDocIndex() {
 
 	for (const filePath of walkFiles(docsRoot, markdownExtensions)) {
 		const slug = slugFromFile(filePath);
+		const legacySlug = legacySlugFromFile(filePath);
 		const title = parseDocMeta(filePath).title;
 		const entry = { filePath, url: `/${slug}/`, title, slug };
 		const basename = path.basename(filePath, path.extname(filePath));
 
 		addIndexEntry(index, slug, entry);
+		addIndexEntry(index, legacySlug, entry);
 		addIndexEntry(index, slug.toLowerCase(), entry);
+		addIndexEntry(index, legacySlug.toLowerCase(), entry);
 		addIndexEntry(index, slug.replace(/\//g, ' / '), entry);
+		addIndexEntry(index, legacySlug.replace(/\//g, ' / '), entry);
 		addIndexEntry(index, basename, entry);
 		addIndexEntry(index, basename.toLowerCase(), entry);
 		addIndexEntry(index, title, entry);

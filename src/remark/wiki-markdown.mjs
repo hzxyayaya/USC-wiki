@@ -91,7 +91,7 @@ function transformSizedMarkdownImage(node) {
 
 /**
  * 兼容 vault 中按文件名写的普通 Markdown 链接。
- * 例如：[大学英语B1](大学英语) → /学习指南/课程攻略/大学英语/
+ * 例如：[大学英语B1](大学英语) → /xxzn/kcgl/dxyy/
  */
 function transformMarkdownLink(node, sourceFile, context) {
 	const url = node.url?.trim();

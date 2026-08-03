@@ -26,7 +26,7 @@ test('resolves the C++ course title to a URL-safe page slug', () => {
 	const link = resolveWikiLink('C++程序设计', sourceFile, createDocIndex(), createVaultIndex());
 
 	assert.equal(link?.kind, 'page');
-	assert.equal(link?.href, '/学习指南/课程攻略/cpp程序设计/');
+	assert.equal(link?.href, '/xxzn/kcgl/cppcxsj/');
 });
 
 function transformWikiImage(value) {

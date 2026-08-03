@@ -16,7 +16,7 @@ export default function NotFound() {
 					返回首页
 				</Link>
 				<Link
-					href="/新生入门/"
+					href="/xsrm/"
 					className="inline-flex h-9 items-center rounded-lg border border-fd-border px-4 text-sm font-medium"
 				>
 					新生入门

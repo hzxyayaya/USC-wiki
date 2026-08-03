@@ -13,7 +13,7 @@ const sections = [
 		kicker: '初来南华',
 		title: '新生入门',
 		description: '入学准备、校园网络、校历与防骗提醒。',
-		href: '/新生入门/',
+		href: '/xsrm/',
 		accent: 'blue',
 	},
 	{
@@ -21,7 +21,7 @@ const sections = [
 		kicker: '认真学习',
 		title: '学习指南',
 		description: '教务、专业、课程攻略与学习资料。',
-		href: '/学习指南/',
+		href: '/xxzn/',
 		accent: 'cyan',
 	},
 	{
@@ -29,7 +29,7 @@ const sections = [
 		kicker: '好好生活',
 		title: '校园生活',
 		description: '常用软件、校园设施与日常生活。',
-		href: '/校园生活/',
+		href: '/xysh/',
 		accent: 'green',
 	},
 	{
@@ -37,7 +37,7 @@ const sections = [
 		kicker: '办好事情',
 		title: '事务办理',
 		description: '报销、研学、证件与常用办事流程。',
-		href: '/事务办理/',
+		href: '/swbl/',
 		accent: 'amber',
 	},
 	{
@@ -45,17 +45,17 @@ const sections = [
 		kicker: '走得更远',
 		title: '竞赛与资源',
 		description: '竞赛、经验、教程与实用资源。',
-		href: '/竞赛与资源/',
+		href: '/jsyzy/',
 		accent: 'orange',
 	},
 ] as const;
 
 const highlights = [
-	{ title: '选课指南', href: '/学习指南/教务指南/选课指南/' },
-	{ title: 'GPA', href: '/学习指南/教务指南/gpa/' },
-	{ title: '校园生活指南', href: '/校园生活/生活指南/' },
-	{ title: '软件推荐', href: '/竞赛与资源/软件与模板/software/' },
-	{ title: '模板下载', href: '/竞赛与资源/软件与模板/templates/' },
+	{ title: '选课指南', href: '/xxzn/jwzn/xkzn/' },
+	{ title: 'GPA', href: '/xxzn/jwzn/gpa/' },
+	{ title: '校园生活指南', href: '/xysh/shzn/' },
+	{ title: '软件推荐', href: '/jsyzy/rjymb/software/' },
+	{ title: '模板下载', href: '/jsyzy/rjymb/templates/' },
 ];
 
 export default function HomePage() {

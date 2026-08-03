@@ -108,7 +108,7 @@ pnpm dev
 
 - [外部链接：GitHub](https://github.com)
 - [内部链接：首页](/)
-- [内部链接：GPA 政策](/学习指南/教务指南/gpa/)
+- [内部链接：GPA 政策](/xxzn/jwzn/gpa/)
 - [锚点链接：跳转到表格](#表格)
 
 ### 图片

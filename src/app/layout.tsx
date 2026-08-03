@@ -76,11 +76,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 					search={{
 						SearchDialog: WikiSearchDialog,
 						links: [
-							['新生入门', '/新生入门/'],
-							['学习指南', '/学习指南/'],
-							['校园生活', '/校园生活/'],
-							['事务办理', '/事务办理/'],
-							['竞赛与资源', '/竞赛与资源/'],
+							['新生入门', '/xsrm/'],
+							['学习指南', '/xxzn/'],
+							['校园生活', '/xysh/'],
+							['事务办理', '/swbl/'],
+							['竞赛与资源', '/jsyzy/'],
 						],
 					}}
 				>
