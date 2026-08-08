@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import type { ReactNode } from 'react';
 import { RootProvider } from 'fumadocs-ui/provider/next';
 import WikiSearchDialog from '@/components/search';
@@ -59,6 +60,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 	return (
 		<html lang="zh-CN" suppressHydrationWarning>
 			<body className="flex min-h-screen flex-col">
+				<Script
+					src="https://cloud.umami.is/script.js"
+					data-website-id="4c3025d7-44db-47d6-9f64-e6b11bae04ef"
+					strategy="afterInteractive"
+				/>
 				<RootProvider
 					i18n={{
 						locale: 'zh-CN',
