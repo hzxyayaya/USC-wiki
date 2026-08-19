@@ -129,5 +129,7 @@ pnpm sync:doc-meta    # 预览/写入 created、updated frontmatter
 
 本项目采用双协议许可：
 
-- **源代码**：MIT License
-- **文档内容**：CC BY-NC-SA 4.0
+- **源代码**：[MIT License](./LICENSE)
+- **文档内容**：[CC BY-NC-SA 4.0](./LICENSE-CONTENT.md)
+
+参与项目时请同时遵守 [USC Wiki 社区行为准则](./CODE_OF_CONDUCT.md)。

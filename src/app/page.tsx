@@ -126,6 +126,16 @@ export default function HomePage() {
 					</nav>
 				</section>
 			</div>
+			<footer className="border-t border-fd-border bg-fd-background px-4 py-4 text-center text-sm text-fd-muted-foreground">
+				<a
+					href="https://www.netlify.com/"
+					target="_blank"
+					rel="noreferrer"
+					className="underline decoration-fd-border underline-offset-4 transition-colors hover:text-fd-foreground"
+				>
+					This site is powered by Netlify
+				</a>
+			</footer>
 		</HomeLayout>
 	);
 }
