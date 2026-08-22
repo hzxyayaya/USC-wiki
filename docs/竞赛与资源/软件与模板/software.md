@@ -47,6 +47,7 @@ updated: 2026-06-21
 ### 开发工具
 - **[VS Code](https://code.visualstudio.com/)**
 - **[JetBrains 系列](https://www.jetbrains.com/)**
+- **[Zed](https://zed.dev/)**
 
 ## Mac
 
