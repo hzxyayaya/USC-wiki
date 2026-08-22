@@ -5,14 +5,14 @@ import {
 	DocsDescription,
 	DocsPage,
 	DocsTitle,
-	EditOnGitHub,
 } from 'fumadocs-ui/layouts/docs/page';
 import { createRelativeLink } from 'fumadocs-ui/mdx';
 import { DocBreadcrumb } from '@/components/doc-breadcrumb';
+import { EditMenu } from '@/components/edit-menu';
 import { getMDXComponents } from '@/components/mdx';
 import { JsonLd } from '@/components/seo-json-ld';
 import { getBreadcrumbJsonLd, getDocBreadcrumbItems } from '@/lib/breadcrumbs';
-import { getGithubEditUrl } from '@/lib/layout.shared';
+import { getGithubEditUrl, getWebEditorUrl } from '@/lib/layout.shared';
 import { getPageFooterItems } from '@/lib/page-navigation.mjs';
 import { siteConfig } from '@/lib/site';
 import { getPublishedPages, isDraftPage, source } from '@/lib/source';
@@ -60,6 +60,12 @@ function toIsoDate(value: string | Date | undefined) {
 	return Number.isNaN(date.getTime()) ? undefined : date.toISOString();
 }
 
+function formatDocDate(value: string | Date | undefined) {
+	if (!value) return undefined;
+	if (value instanceof Date) return value.toISOString().slice(0, 10);
+	return value.trim();
+}
+
 export default async function DocPage({ params }: PageProps) {
 	const { slug } = await params;
 	const page = source.getPage(slug);
@@ -68,6 +74,9 @@ export default async function DocPage({ params }: PageProps) {
 	if (process.env.NODE_ENV === 'production' && isDraftPage(page)) notFound();
 
 	const MDX = page.data.body;
+	const pageDates = page.data as SeoPageData;
+	const created = formatDocDate(pageDates.created);
+	const updated = formatDocDate(pageDates.updated);
 	const title = page.data.title || page.url;
 	const RelativeLink = createRelativeLink(source, page);
 	const breadcrumbItems = getDocBreadcrumbItems(page, (slugs) => source.getPage(slugs));
@@ -110,8 +119,18 @@ export default async function DocPage({ params }: PageProps) {
 					})}
 				/>
 			</DocsBody>
-			<div className="not-prose mt-6 flex flex-row flex-wrap items-center justify-start">
-				<EditOnGitHub href={getGithubEditUrl(page.path)} />
+			<div className="not-prose mt-8 flex flex-row flex-wrap items-center justify-between gap-4 border-t border-fd-border pt-4">
+				<EditMenu
+					webEditorUrl={getWebEditorUrl(page.path)}
+					githubUrl={getGithubEditUrl(page.path)}
+				/>
+				{created || updated ? (
+					<p className="text-xs text-fd-muted-foreground">
+						{created ? `创建 ${created}` : null}
+						{created && updated ? ' · ' : null}
+						{updated ? `更新 ${updated}` : null}
+					</p>
+				) : null}
 			</div>
 		</DocsPage>
 	);
