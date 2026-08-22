@@ -12,7 +12,7 @@ import { DocBreadcrumb } from '@/components/doc-breadcrumb';
 import { getMDXComponents } from '@/components/mdx';
 import { JsonLd } from '@/components/seo-json-ld';
 import { getBreadcrumbJsonLd, getDocBreadcrumbItems } from '@/lib/breadcrumbs';
-import { getGithubEditUrl } from '@/lib/layout.shared';
+import { getGithubEditUrl, getWebEditorUrl } from '@/lib/layout.shared';
 import { getPageFooterItems } from '@/lib/page-navigation.mjs';
 import { siteConfig } from '@/lib/site';
 import { getPublishedPages, isDraftPage, source } from '@/lib/source';
@@ -110,7 +110,28 @@ export default async function DocPage({ params }: PageProps) {
 					})}
 				/>
 			</DocsBody>
-			<div className="not-prose mt-6 flex flex-row flex-wrap items-center justify-start">
+			<div className="not-prose mt-6 flex flex-row flex-wrap items-center justify-start gap-4">
+				<a
+					href={getWebEditorUrl(page.path)}
+					target="_blank"
+					rel="noreferrer"
+					className="inline-flex items-center gap-2 text-sm font-medium text-fd-muted-foreground transition-colors hover:text-fd-foreground"
+				>
+					<svg
+						aria-hidden="true"
+						viewBox="0 0 24 24"
+						className="size-4"
+						fill="none"
+						stroke="currentColor"
+						strokeWidth="2"
+						strokeLinecap="round"
+						strokeLinejoin="round"
+					>
+						<path d="M12 20h9" />
+						<path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z" />
+					</svg>
+					在网页编辑器中修改
+				</a>
 				<EditOnGitHub href={getGithubEditUrl(page.path)} />
 			</div>
 		</DocsPage>
