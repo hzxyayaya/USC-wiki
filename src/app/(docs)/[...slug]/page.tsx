@@ -5,10 +5,10 @@ import {
 	DocsDescription,
 	DocsPage,
 	DocsTitle,
-	EditOnGitHub,
 } from 'fumadocs-ui/layouts/docs/page';
 import { createRelativeLink } from 'fumadocs-ui/mdx';
 import { DocBreadcrumb } from '@/components/doc-breadcrumb';
+import { EditMenu } from '@/components/edit-menu';
 import { getMDXComponents } from '@/components/mdx';
 import { JsonLd } from '@/components/seo-json-ld';
 import { getBreadcrumbJsonLd, getDocBreadcrumbItems } from '@/lib/breadcrumbs';
@@ -60,6 +60,12 @@ function toIsoDate(value: string | Date | undefined) {
 	return Number.isNaN(date.getTime()) ? undefined : date.toISOString();
 }
 
+function formatDocDate(value: string | Date | undefined) {
+	if (!value) return undefined;
+	if (value instanceof Date) return value.toISOString().slice(0, 10);
+	return value.trim();
+}
+
 export default async function DocPage({ params }: PageProps) {
 	const { slug } = await params;
 	const page = source.getPage(slug);
@@ -68,6 +74,9 @@ export default async function DocPage({ params }: PageProps) {
 	if (process.env.NODE_ENV === 'production' && isDraftPage(page)) notFound();
 
 	const MDX = page.data.body;
+	const pageDates = page.data as SeoPageData;
+	const created = formatDocDate(pageDates.created);
+	const updated = formatDocDate(pageDates.updated);
 	const title = page.data.title || page.url;
 	const RelativeLink = createRelativeLink(source, page);
 	const breadcrumbItems = getDocBreadcrumbItems(page, (slugs) => source.getPage(slugs));
@@ -110,29 +119,18 @@ export default async function DocPage({ params }: PageProps) {
 					})}
 				/>
 			</DocsBody>
-			<div className="not-prose mt-6 flex flex-row flex-wrap items-center justify-start gap-4">
-				<a
-					href={getWebEditorUrl(page.path)}
-					target="_blank"
-					rel="noreferrer"
-					className="inline-flex items-center gap-2 text-sm font-medium text-fd-muted-foreground transition-colors hover:text-fd-foreground"
-				>
-					<svg
-						aria-hidden="true"
-						viewBox="0 0 24 24"
-						className="size-4"
-						fill="none"
-						stroke="currentColor"
-						strokeWidth="2"
-						strokeLinecap="round"
-						strokeLinejoin="round"
-					>
-						<path d="M12 20h9" />
-						<path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z" />
-					</svg>
-					在网页编辑器中修改
-				</a>
-				<EditOnGitHub href={getGithubEditUrl(page.path)} />
+			<div className="not-prose mt-8 flex flex-row flex-wrap items-center justify-between gap-4 border-t border-fd-border pt-4">
+				<EditMenu
+					webEditorUrl={getWebEditorUrl(page.path)}
+					githubUrl={getGithubEditUrl(page.path)}
+				/>
+				{created || updated ? (
+					<p className="text-xs text-fd-muted-foreground">
+						{created ? `创建 ${created}` : null}
+						{created && updated ? ' · ' : null}
+						{updated ? `更新 ${updated}` : null}
+					</p>
+				) : null}
 			</div>
 		</DocsPage>
 	);

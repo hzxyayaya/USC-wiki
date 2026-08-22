@@ -8,7 +8,6 @@ import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import { remarkResourceCards } from './src/remark/resource-cards.mjs';
 import { remarkWikiMarkdown } from './src/remark/wiki-markdown.mjs';
-import { remarkDocMeta } from './src/remark/doc-meta.mjs';
 import { rehypeResourceCards } from './src/rehype/resource-cards.mjs';
 import { rehypeWikiImageEmbeds } from './src/rehype/wiki-image-embeds.mjs';
 import { rehypeWikiLinks } from './src/rehype/wiki-links.mjs';
@@ -54,7 +53,6 @@ export default defineConfig({
 			// 不要用 remark-directive：会把 9:00 / 16:00 里的 :00 解析成指令，编成非法 <div>
 			remarkResourceCards,
 			remarkWikiMarkdown,
-			remarkDocMeta,
 			remarkMath,
 			...plugins,
 		],
